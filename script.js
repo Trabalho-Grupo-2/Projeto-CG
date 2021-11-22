@@ -22,7 +22,7 @@ let score = 0,
   playerName = "",
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
-  console.log(myLeaderBoard);
+console.log(myLeaderBoard);
 
 //MOUSE COORDINATES//
 let x, y;
@@ -202,9 +202,9 @@ class Asteroid {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
   update() {
-    if(this.x<0 || this.x>W || this.y<0 || this.y > H){
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) {
       this.destroy();
-      
+
     }
     this.x += -this.velocity;
     this.y += this.velocity;
@@ -247,7 +247,7 @@ class Ship {
       this.y = this.size;
     }
   }
-  destroy(){
+  destroy() {
     ships.splice(ships.indexOf(this), 1);
   }
 }
@@ -340,7 +340,7 @@ function startGame() {
   render();
 }
 
-function insertName(){
+function insertName() {
   insertNameBool = true
   document.getElementById("menu").style.display = "none";
   clear();
@@ -354,9 +354,9 @@ function insertName(){
 
 }
 
-function writeName(char){
+function writeName(char) {
   clear();
-  
+
   ctx.font = "45px llpixel";
   ctx.textAlign = "center";
   ctx.fillText("Insert Name", W / 2, H / 5);
@@ -364,7 +364,7 @@ function writeName(char){
 
   playerName += char
 
-  ctx.fillText(playerName, W/2, H/2);  
+  ctx.fillText(playerName, W / 2, H / 2);
 }
 
 //FUNCTION TO DISPLAY LEADERBOARD ASSOCIATED TO HTML BUTTON//
@@ -377,13 +377,13 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-    ctx.fillText(`Name:                  Score:`, W / 2, H / 3);
-  for (let i = 1 ; i<= myLeaderBoard.length; i++){
+  ctx.fillText(`Name:                  Score:`, W / 2, H / 3);
+  for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
-    ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W/2, H/3 + (50*i))
+    ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
     console.log(i)
   }
-  
+
 }
 
 //FUNCTION TO DISPLAY HELP MENU ASSOCIATED TO HTML BUTTON//
@@ -427,27 +427,30 @@ function displayHUD() {
   ctx.fillText(`Score: ${score}`, 25, 30);
 }
 
-function filterLeaderboard(a,b) {
-  
-    if ( a.pScore < b.pScore ){
-      return 1;
-    }
-    if ( a.pScore > b.pScore ){
-      return -1;
-    }
-    return 0;
-  }
+function filterLeaderboard(a, b) {
 
-  function insertScore() {
-    
-    myLeaderBoard.push( { pName: playerName , pScore:score});
-    console.log(myLeaderBoard);
-    myLeaderBoard.sort(filterLeaderboard);
-    if ( myLeaderBoard.length > 5){
-      myLeaderBoard.pop();
-    }
-    localStorage.setItem("Leaderboard", JSON.stringify(myLeaderBoard));
+  if (a.pScore < b.pScore) {
+    return 1;
   }
+  if (a.pScore > b.pScore) {
+    return -1;
+  }
+  return 0;
+}
+
+function insertScore() {
+
+  myLeaderBoard.push({
+    pName: playerName,
+    pScore: score
+  });
+  console.log(myLeaderBoard);
+  myLeaderBoard.sort(filterLeaderboard);
+  if (myLeaderBoard.length > 5) {
+    myLeaderBoard.pop();
+  }
+  localStorage.setItem("Leaderboard", JSON.stringify(myLeaderBoard));
+}
 
 
 createAsteroidsOrEnemys();
@@ -468,7 +471,7 @@ function colisionHandler() {
     if (checkColision(myPlayer, asteroid)) {
       asteroid.destroy();
       health--;
-      
+
     }
   }
   for (ship of ships) {
@@ -479,7 +482,7 @@ function colisionHandler() {
   }
   for (missile of missiles) {
     for (asteroid of asteroids) {
-      
+
       if (checkColision(missile, asteroid)) {
         asteroid.destroy();
         missile.destroy();
@@ -487,11 +490,11 @@ function colisionHandler() {
       }
     }
   }
-  for (missile of missiles){
-    for (ship of ships){
-      if (checkColision(missile,ship)){
+  for (missile of missiles) {
+    for (ship of ships) {
+      if (checkColision(missile, ship)) {
         ship.destroy();
-        score +=1000;
+        score += 1000;
       }
     }
   }
@@ -507,7 +510,7 @@ function render() {
       asteroid.draw();
       asteroid.update();
     });
-    
+
     ships.forEach(spaceship => {
 
       spaceship.draw();
