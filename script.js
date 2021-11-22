@@ -77,7 +77,7 @@ addEventListener("keydown", (event) => {
     keys.SpaceBar = true;
   }
   if (insertNameBool) {
-    if(event.keyCode == 13) {
+    if (event.keyCode == 13) {
       startGame()
     }
     if (event.keyCode >= 65 && event.keyCode <= 90) {
