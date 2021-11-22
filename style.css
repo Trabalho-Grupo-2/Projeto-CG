@@ -1,0 +1,97 @@
+@font-face {
+    font-family: llpixel;
+    src: url(../fonts/LLPIXEL3.ttf);
+}
+
+canvas {
+    display: flex;
+    margin: auto;
+    margin-top: 50px;
+    z-index: 2;
+}
+
+
+body{
+    background-image: url(../sprites/galaxy.gif);
+    background-size: cover;
+}
+
+
+.retro {
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: black;
+    color: white;
+    font-size: 20px;
+    font-family: llpixel;
+    font-weight: 400;
+    text-align: left;
+    border: 3px solid white !important;
+    border-radius: 0;
+    box-shadow: 3px 3px white, 5px 5px black;
+    padding-right: 5%;
+    margin-top: 20px;
+    width: 175px;
+}
+
+.retro:hover {
+    color: white;
+    background: black;
+}
+
+.retro:active {
+    background-color: black !important;
+    color: white !important;
+    box-shadow: 0px 0px black;
+    transform: translateX(5px) translateY(2px);
+}
+
+.rbtn-big {
+    box-shadow: 2px 2px white, 3px 3px black;
+    padding: 20px;
+    display: block;
+    text-align: center;
+    margin: auto;
+    margin-bottom:20px;
+    justify-content: center;
+}
+
+.retro-img {
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+    font-size: 1rem;
+    background: black;
+    color: white;
+    font-size: 20px;
+    font-family: llpixel;
+    font-weight: 400;
+    text-align: center;
+    border-radius: 0;
+    box-shadow: 3px 3px white, 5px 5px black;
+}
+
+.retro-img:active {
+    background-color: black !important;
+    color: white !important;
+    box-shadow: 0px 0px black;
+    transform: translateX(5px) translateY(2px);
+}
+
+#container {
+    position: relative;
+}
+
+
+#menu {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    bottom: 20px;
+    left: 0;
+    display: inline-block;
+}
