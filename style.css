@@ -1,6 +1,6 @@
 @font-face {
     font-family: llpixel;
-    src: url(../fonts/LLPIXEL3.ttf);
+    src: url(fonts/LLPIXEL3.ttf);
 }
 
 canvas {
@@ -12,7 +12,7 @@ canvas {
 
 
 body{
-    background-image: url(../sprites/galaxy.gif);
+    background-image:  url(sprites/galaxy.gif);
     background-size: cover;
 }
 
