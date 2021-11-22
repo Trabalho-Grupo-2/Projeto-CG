@@ -76,9 +76,13 @@ addEventListener("keydown", (event) => {
   if (event.keyCode == 32) {
     keys.SpaceBar = true;
   }
-
   if (insertNameBool) {
-    writeName(event.key)
+    if(event.keyCode == 13) {
+      startGame()
+    }
+    if (event.keyCode >= 65 && event.keyCode <= 90) {
+      writeName(event.key)
+    }
   }
 
   event.preventDefault();
@@ -333,6 +337,7 @@ function clear() {
 
 function startGame() {
   gamestart = true;
+  insertNameBool = false;
   document.getElementById("menu").style.display = "none";
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
@@ -407,6 +412,7 @@ function callMenu() {
   bg.style.backgroundImage = "url(sprites/galaxy.gif)";
   bg.style.backgroundSize = "cover";
   gamestart = false;
+  insertNameBool = false;
 }
 
 //FUNCTION THAT DEFINES THE BACKBUTTON//
@@ -451,7 +457,6 @@ function insertScore() {
   }
   localStorage.setItem("Leaderboard", JSON.stringify(myLeaderBoard));
 }
-
 
 createAsteroidsOrEnemys();
 
