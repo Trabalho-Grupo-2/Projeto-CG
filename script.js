@@ -26,7 +26,8 @@ let x, y;
 
 //GAMESTART AND BACKBUTTON CONTROL BOOL
 let gamestart = false,
-  backButtonBool = false;
+  backButtonBool = false,
+  insertNameBool = false;
 
 // object arrays
 const asteroids = [],
@@ -71,6 +72,11 @@ addEventListener("keydown", (event) => {
   if (event.keyCode == 32) {
     keys.SpaceBar = true;
   }
+
+  if (insertNameBool) {
+    writeName(event.key)
+  }
+
   event.preventDefault();
 });
 
@@ -101,12 +107,6 @@ addEventListener("mousemove", (event) => {
 //DETECT CLICK FOR BACK BUTTON //
 
 addEventListener("click", (event) => {
-  if (x > 450 && x < 550 && y > 200 && y < 400 && gamestart == false) {
-    gamestart = true;
-    render();
-    event.preventDefault();
-  }
-
   if (backButtonBool == true && x >= 750 && x <= 800 && y >= 85 && y <= 127) {
     callMenu();
   }
@@ -247,12 +247,13 @@ class Ship {
 //PLAYER MISSILE CLASS DEFINITION //
 
 class Missile {
-  constructor(x, y) {
+  constructor(x, y, angle) {
     this.x = x;
     this.y = y;
     this.color = "white";
     this.radius = 10;
     this.velocity = 2;
+    this.angle = angle;
   }
   draw() {
     ctx.fillStyle = this.color;
@@ -262,8 +263,8 @@ class Missile {
     ctx.closePath();
   }
   update() {
-    this.x += this.velocity * Math.cos(myPlayer.angle * Math.PI / 180 - (Math.PI / 2));
-    this.y += this.velocity * Math.sin(myPlayer.angle * Math.PI / 180 - (Math.PI / 2));
+    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
+    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
 
 
   }
@@ -278,7 +279,7 @@ class Missile {
 //METHOD TO ADD MISSILES TO THE ARRAY //
 
 function pushMissiles() {
-  missiles.push(new Missile(myPlayer.x, myPlayer.y));
+  missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle, 500));
   console.log(missiles);
 }
 
@@ -330,6 +331,33 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
   render();
+}
+
+function insertName(){
+  insertNameBool = true
+  document.getElementById("menu").style.display = "none";
+  clear();
+
+  playerName = ""
+
+  ctx.font = "45px llpixel";
+  ctx.textAlign = "center";
+  ctx.fillText("Insert Name", W / 2, H / 5);
+  backButton();
+
+}
+
+function writeName(char){
+  clear();
+  
+  ctx.font = "45px llpixel";
+  ctx.textAlign = "center";
+  ctx.fillText("Insert Name", W / 2, H / 5);
+  backButton();
+
+  playerName += char
+
+  ctx.fillText(playerName, W/2, H/2);  
 }
 
 //FUNCTION TO DISPLAY LEADERBOARD ASSOCIATED TO HTML BUTTON//
@@ -417,15 +445,15 @@ function render() {
     }
     if (keys.SpaceBar == true) {
 
-      pushMissiles()
-
-      missiles.forEach(missile => {
-        missile.draw();
-        missile.update();
-        missile.destroy();
-      });
-
+      pushMissiles();
     }
+
+    missiles.forEach(missile => {
+      missile.draw();
+      missile.update();
+      missile.destroy();
+    });
+
     displayHUD();
     if (health == 0) {
       callMenu();
