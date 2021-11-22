@@ -377,7 +377,7 @@ function callMenu() {
   health = 3;
   document.getElementById("menu").style.display = "inline-block";
   let bg = document.getElementById("canvas1");
-  bg.style.backgroundImage = "url(../sprites/galaxy.gif)";
+  bg.style.backgroundImage = "url(sprites/galaxy.gif)";
   bg.style.backgroundSize = "cover";
   gamestart = false;
 }
