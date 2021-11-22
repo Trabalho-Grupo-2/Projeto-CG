@@ -29,7 +29,9 @@ let x, y;
 
 //GAMESTART AND BACKBUTTON CONTROL BOOL
 let gamestart = false,
-  backButtonBool = false;
+
+  backButtonBool = false,
+  insertNameBool = false;
 
 // object arrays
 const asteroids = [],
@@ -74,6 +76,11 @@ addEventListener("keydown", (event) => {
   if (event.keyCode == 32) {
     keys.SpaceBar = true;
   }
+
+  if (insertNameBool) {
+    writeName(event.key)
+  }
+
   event.preventDefault();
 });
 
@@ -104,12 +111,6 @@ addEventListener("mousemove", (event) => {
 //DETECT CLICK FOR BACK BUTTON //
 
 addEventListener("click", (event) => {
-  if (x > 450 && x < 550 && y > 200 && y < 400 && gamestart == false) {
-    gamestart = true;
-    render();
-    event.preventDefault();
-  }
-
   if (backButtonBool == true && x >= 750 && x <= 800 && y >= 85 && y <= 127) {
     callMenu();
   }
@@ -132,10 +133,10 @@ class Player {
     if (this.velocity < this.maxVelocity) {
       this.velocity += 0.02;
     }
-    this.x +=
-      this.velocity * Math.cos((this.angle * Math.PI) / 180 - Math.PI / 2);
-    this.y +=
-      this.velocity * Math.sin((this.angle * Math.PI) / 180 - Math.PI / 2);
+
+    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
+    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
+
   }
 
   brake() {
@@ -160,15 +161,10 @@ class Player {
 
   turnShip() {
     ctx.save();
-    ctx.translate(this.x + this.size / 2, this.y + this.size / 2);
+
+    ctx.translate(this.x + (this.size / 2), this.y + (this.size / 2));
     ctx.rotate((this.angle * Math.PI) / 180);
-    ctx.drawImage(
-      this.image,
-      -this.size / 2,
-      -this.size / 2,
-      this.size,
-      this.size
-    );
+    ctx.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
     ctx.restore();
   }
 
@@ -259,31 +255,26 @@ class Ship {
 //PLAYER MISSILE CLASS DEFINITION //
 
 class Missile {
-  constructor(x, y) {
+  constructor(x, y, angle) {
     this.x = x;
     this.y = y;
     this.color = "white";
     this.radius = 10;
     this.velocity = 2;
+    this.angle = angle;
   }
   draw() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(
-      this.x + myPlayer.size / 2,
-      this.y - myPlayer.size / 2,
-      this.radius,
-      0,
-      2 * Math.PI
-    );
+
+    ctx.arc(this.x + (myPlayer.size / 2), this.y - (myPlayer.size / 2), this.radius, 0, 2 * Math.PI)
+
     ctx.fill();
     ctx.closePath();
   }
   update() {
-    this.x +=
-      this.velocity * Math.cos((myPlayer.angle * Math.PI) / 180 - Math.PI / 2);
-    this.y +=
-      this.velocity * Math.sin((myPlayer.angle * Math.PI) / 180 - Math.PI / 2);
+    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
+    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
   }
   destroy() {
     if (this.x < 0 || this.x > W || this.y < 0 || this.y > W) {
@@ -295,7 +286,7 @@ class Missile {
 //METHOD TO ADD MISSILES TO THE ARRAY //
 
 function pushMissiles() {
-  missiles.push(new Missile(myPlayer.x, myPlayer.y));
+  missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle, 500));
   console.log(missiles);
 }
 
@@ -347,6 +338,33 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
   render();
+}
+
+function insertName(){
+  insertNameBool = true
+  document.getElementById("menu").style.display = "none";
+  clear();
+
+  playerName = ""
+
+  ctx.font = "45px llpixel";
+  ctx.textAlign = "center";
+  ctx.fillText("Insert Name", W / 2, H / 5);
+  backButton();
+
+}
+
+function writeName(char){
+  clear();
+  
+  ctx.font = "45px llpixel";
+  ctx.textAlign = "center";
+  ctx.fillText("Insert Name", W / 2, H / 5);
+  backButton();
+
+  playerName += char
+
+  ctx.fillText(playerName, W/2, H/2);  
 }
 
 //FUNCTION TO DISPLAY LEADERBOARD ASSOCIATED TO HTML BUTTON//
@@ -489,8 +507,9 @@ function render() {
       asteroid.draw();
       asteroid.update();
     });
+    
+    ships.forEach(spaceship => {
 
-    ships.forEach((spaceship) => {
       spaceship.draw();
     });
 
@@ -507,6 +526,7 @@ function render() {
       myPlayer.turnRight();
     }
     if (keys.SpaceBar == true) {
+
       if (missiles.length < 1) {
         pushMissiles();
       }
@@ -516,6 +536,7 @@ function render() {
         missile.destroy();
       });
     }
+
     displayHUD();
     if (health == 0) {
       insertScore();
