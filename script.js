@@ -25,7 +25,8 @@ let score = 0,
 let x, y;
 
 //GAMESTART AND BACKBUTTON CONTROL BOOL
-let gamestart = false ,backButtonBool = false;
+let gamestart = false,
+  backButtonBool = false;
 
 // object arrays
 const asteroids = [],
@@ -67,7 +68,7 @@ addEventListener("keydown", (event) => {
   if (event.key == "ArrowRight") {
     keys.ArrowRight = true;
   }
-  if(event.keyCode == 32){
+  if (event.keyCode == 32) {
     keys.SpaceBar = true;
   }
   event.preventDefault();
@@ -84,7 +85,7 @@ addEventListener("keyup", (event) => {
   if (event.key == "ArrowRight") {
     keys.ArrowRight = false;
   }
-  if(event.keyCode == 32){
+  if (event.keyCode == 32) {
     keys.SpaceBar = false;
   }
 });
@@ -128,8 +129,10 @@ class Player {
     if (this.velocity < this.maxVelocity) {
       this.velocity += 0.02;
     }
-    this.x += this.velocity*Math.cos(this.angle*Math.PI/180-(Math.PI/2));
-    this.y += this.velocity*Math.sin(this.angle*Math.PI/180-(Math.PI/2));
+    this.x +=
+      this.velocity * Math.cos((this.angle * Math.PI) / 180 - Math.PI / 2);
+    this.y +=
+      this.velocity * Math.sin((this.angle * Math.PI) / 180 - Math.PI / 2);
   }
 
   brake() {
@@ -138,8 +141,8 @@ class Player {
     }
   }
 
-  shoot(){
-    Missile.draw()
+  shoot() {
+    Missile.draw();
   }
 
   turnLeft() {
@@ -154,23 +157,29 @@ class Player {
 
   turnShip() {
     ctx.save();
-    ctx.translate(this.x + (this.size /2), this.y + (this.size/2));
+    ctx.translate(this.x + this.size / 2, this.y + this.size / 2);
     ctx.rotate((this.angle * Math.PI) / 180);
-    ctx.drawImage(this.image,-this.size/2,-this.size/2, this.size, this.size);
+    ctx.drawImage(
+      this.image,
+      -this.size / 2,
+      -this.size / 2,
+      this.size,
+      this.size
+    );
     ctx.restore();
   }
 
   update() {
-    if(this.y < -this.size){
+    if (this.y < -this.size) {
       this.y = H;
     }
-    if(this.y>H+this.size){
-      this.y=0;
+    if (this.y > H + this.size) {
+      this.y = 0;
     }
-    if(this.x<-this.size){
-      this.x = W
+    if (this.x < -this.size) {
+      this.x = W;
     }
-    if(this.x > W+this.size){
+    if (this.x > W + this.size) {
       this.x = 0;
     }
   }
@@ -241,6 +250,9 @@ class Ship {
       this.y = this.size;
     }
   }
+  destroy(){
+    ships.splice(ships.indexOf(this), 1);
+  }
 }
 
 //PLAYER MISSILE CLASS DEFINITION //
@@ -256,21 +268,26 @@ class Missile {
   draw() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.x+(myPlayer.size/2), this.y-(myPlayer.size/2), this.radius, 0, 2 * Math.PI)
+    ctx.arc(
+      this.x + myPlayer.size / 2,
+      this.y - myPlayer.size / 2,
+      this.radius,
+      0,
+      2 * Math.PI
+    );
     ctx.fill();
     ctx.closePath();
   }
-  update(){
-    this.x += this.velocity*Math.cos(myPlayer.angle*Math.PI/180-(Math.PI/2));
-    this.y += this.velocity*Math.sin(myPlayer.angle*Math.PI/180-(Math.PI/2));
-    
-    
+  update() {
+    this.x +=
+      this.velocity * Math.cos((myPlayer.angle * Math.PI) / 180 - Math.PI / 2);
+    this.y +=
+      this.velocity * Math.sin((myPlayer.angle * Math.PI) / 180 - Math.PI / 2);
   }
   destroy() {
-    if(this.x<0 || this.x>W || this.y <0 || this.y>W){
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > W) {
       missiles.splice(missiles.indexOf(this), 1);
     }
-    
   }
 }
 
@@ -380,50 +397,88 @@ function displayHUD() {
   }
   ctx.font = "20px llpixel";
   ctx.textAlign = "left";
-  ctx.fillText(`Score: ${score}`, 25, 30); 
+  ctx.fillText(`Score: ${score}`, 25, 30);
 }
 
 createAsteroidsOrEnemys();
 
+function checkColision(obj1, obj2) {
+  if (
+    obj1.x + obj1.size / 2 >= obj2.x - obj2.size / 2 &&
+    obj1.x - obj1.size / 2 <= obj2.x + obj2.size / 2 &&
+    obj1.y + obj1.size / 2 >= obj2.y - obj2.size / 2 &&
+    obj1.y - obj1.size / 2 <= obj2.y + obj2.size / 2
+  ) {
+    return true;
+  }
+}
+
+function colisionHandler() {
+  for (asteroid in asteroids) {
+    if (checkColision(myPlayer, asteroid)) {
+      health--;
+    }
+  }
+  for (ship in ships) {
+    if (checkColision(myPlayer, ship)) {
+      health--;
+    }
+  }
+  for (missile in missiles) {
+    for (asteroid in asteroids) {
+      if (checkColision(missile, asteroid)) {
+        asteroid.destroy();
+        missile.destroy();
+        score += 100;
+      }
+    }
+  }
+  for (missile in missiles){
+    for (ship in ships){
+      if (checkColision(missile,ship)){
+        ship.destroy();
+        score +=1000;
+      }
+    }
+  }
+}
 
 //RENDER FUNCTION//
 
 function render() {
   if (gamestart == true) {
-
-    
     clear();
-    //Create ASTEROIDS//
-    asteroids.forEach(asteroid => {
+    colisionHandler();
+    asteroids.forEach((asteroid) => {
       asteroid.draw();
     });
-    
-    ships.forEach(spaceship => {
+
+    ships.forEach((spaceship) => {
       spaceship.draw();
-    })
+    });
 
     myPlayer.turnShip();
     myPlayer.update();
 
-    if(keys.ArrowUp == true){
+    if (keys.ArrowUp == true) {
       myPlayer.accelerate();
-      }
-      if(keys.ArrowLeft == true){
+    }
+    if (keys.ArrowLeft == true) {
       myPlayer.turnLeft();
-      }
-      if(keys.ArrowRight == true){
+    }
+    if (keys.ArrowRight == true) {
       myPlayer.turnRight();
-      }
-      if(keys.SpaceBar == true){
-        if(missiles.length < 1){
+    }
+    if (keys.SpaceBar == true) {
+      if (missiles.length < 1) {
         pushMissiles();
-        }
-        missiles.forEach(missile => {
-          missile.draw();
-          missile.update();
-          missile.destroy();
-        });
       }
+      missiles.forEach((missile) => {
+        missile.draw();
+        missile.update();
+        missile.destroy();
+      });
+    }
     displayHUD();
     if (health == 0) {
       callMenu();
