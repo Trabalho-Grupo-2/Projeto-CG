@@ -74,6 +74,7 @@ addEventListener("keydown", (event) => {
   }
   if (event.keyCode == 32) {
     keys.SpaceBar = true;
+    pushMissiles();
   }
   if (insertNameBool) {
     if (event.keyCode == 13) {
@@ -267,7 +268,10 @@ class Missile {
   draw() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.x + (myPlayer.size / 2), this.y - (myPlayer.size / 2), this.radius, 0, 2 * Math.PI)+
+
+    ctx.arc(this.x + (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
+
+
     ctx.fill();
     ctx.closePath();
   }
@@ -286,7 +290,7 @@ class Missile {
 
 function pushMissiles() {
   missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
-}
+  }
 
 //FUNCTION THAT CHOOSES IF WE CREATE AN ASTEROID OR AN ENEMY SHIP (10% CHANGE IT IS A SHIP)//
 
@@ -376,7 +380,9 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Name:                  Score:`, W / 2, H / 3);
+  ctx.fillText(`Name:`, W/4, H / 3);
+  ctx.font = "30px llpixel"
+  ctx.fillText(`Score:`, W/1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
     ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
@@ -533,14 +539,14 @@ function render() {
     if (keys.SpaceBar == true) {
 
       if (missiles.length < 1) {
-        pushMissiles();
+       
       }
-      missiles.forEach((missile) => {
-        missile.draw();
-        missile.update();
-        missile.destroy();
-      });
     }
+    missiles.forEach((missile) => {
+      missile.draw();
+      missile.update();
+      missile.destroy();
+    });
     
 
     displayHUD();
