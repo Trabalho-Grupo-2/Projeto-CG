@@ -20,6 +20,7 @@ let score = 0,
   scores = [],
   health = 3,
   playerName = "",
+  secondSeconds = 0,
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 
@@ -28,7 +29,6 @@ let x, y;
 
 //GAMESTART AND BACKBUTTON CONTROL BOOL
 let gamestart = false,
-
   backButtonBool = false,
   insertNameBool = false;
 
@@ -270,7 +270,7 @@ class Missile {
     ctx.fillStyle = this.color;
     ctx.beginPath();
 
-    ctx.arc(this.x + (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
+    ctx.arc(this.x + (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
 
 
     ctx.fill();
@@ -290,8 +290,18 @@ class Missile {
 //METHOD TO ADD MISSILES TO THE ARRAY //
 
 function pushMissiles() {
-  missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
+
+  firstSecond = new Date().getTime();
+  firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
+  console.log(firstSecond);
+
+  if (secondSeconds < firstSecond) {
+    missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   }
+
+  secondSeconds = firstSecond
+}
+
 
 //FUNCTION THAT CHOOSES IF WE CREATE AN ASTEROID OR AN ENEMY SHIP (10% CHANGE IT IS A SHIP)//
 
@@ -302,7 +312,7 @@ function createAsteroidsOrEnemys() {
       new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
     );
     enemyCount--;
-    
+
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
@@ -313,7 +323,7 @@ function createAsteroidsOrEnemys() {
       );
     }
     enemyCount++;
-    
+
   } else {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
@@ -324,7 +334,7 @@ function createAsteroidsOrEnemys() {
         )
       );
     }
-    
+
   }
 }
 
@@ -383,12 +393,14 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Name:`, W/4, H / 3);
+  ctx.fillText(`Name:`, W/3.2, H / 3);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Score:`, W/1.5, H / 3);
+  ctx.fillText(`Score:`, W / 1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
-    ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
+    ctx.fillText(`${myLeaderBoard[i-1].pName}`, W / 3.2, H / 3 + (50 * i))
+    ctx.font = "30px llpixel"
+    ctx.fillText(`${myLeaderBoard[i-1].pScore}`, W / 1.5, H / 3 + (50 * i))
   }
 
 }
@@ -477,7 +489,7 @@ function colisionHandler() {
     if (checkColision(myPlayer, asteroid)) {
       asteroid.destroy();
       health--;
-      myPlayer.x = W / 2 -50;
+      myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
       myPlayer.angle = 0;
     }
@@ -523,7 +535,6 @@ function render() {
     });
 
     ships.forEach(spaceship => {
-
       spaceship.draw();
     });
 
@@ -561,7 +572,7 @@ function render() {
       missile.update();
       missile.destroy();
     });
-    
+
 
     displayHUD();
     if (health == 0) {
