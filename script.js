@@ -20,6 +20,7 @@ let score = 0,
   scores = [],
   health = 3,
   playerName = "",
+  secondSeconds = 0,
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 console.log(myLeaderBoard);
@@ -29,7 +30,6 @@ let x, y;
 
 //GAMESTART AND BACKBUTTON CONTROL BOOL
 let gamestart = false,
-
   backButtonBool = false,
   insertNameBool = false;
 
@@ -290,8 +290,14 @@ class Missile {
 //METHOD TO ADD MISSILES TO THE ARRAY //
 
 function pushMissiles() {
-  missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle, 500));
-  console.log(missiles);
+  firstSecond = new Date().getTime();
+  firstSecond = (firstSecond-(firstSecond%1000))/1000;
+
+  if (secondSeconds < firstSecond) {
+    missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
+  }
+  
+  secondSeconds = firstSecond
 }
 
 //FUNCTION THAT CHOOSES IF WE CREATE AN ASTEROID OR AN ENEMY SHIP (10% CHANGE IT IS A SHIP)//
@@ -476,7 +482,7 @@ function colisionHandler() {
     if (checkColision(myPlayer, asteroid)) {
       asteroid.destroy();
       health--;
-      myPlayer.x = W / 2 -50;
+      myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
       myPlayer.angle = 0;
     }
@@ -519,7 +525,6 @@ function render() {
     });
 
     ships.forEach(spaceship => {
-
       spaceship.draw();
     });
 
@@ -537,9 +542,8 @@ function render() {
     }
     if (keys.SpaceBar == true) {
 
-      if (missiles.length < 1) {
         pushMissiles();
-      }
+
       missiles.forEach((missile) => {
         missile.draw();
         missile.update();
