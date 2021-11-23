@@ -194,10 +194,10 @@ const myPlayer = new Player(W / 2 - 50, H / 2 - 50);
 // ASTEROIDS CLASS DEFINITION WITH METHODS//
 
 class Asteroid {
-  constructor(x, y,size) {
+  constructor(x, y,size, velocity) {
     this.x = x;
     this.y = y;
-    this.velocity = 0.2;
+    this.velocity = velocity;
     this.image = images.asteroid;
     this.size = size;
   }
@@ -218,7 +218,8 @@ class Asteroid {
       new Asteroid(
         Math.round(Math.random() * W),
         Math.round(Math.random() * H),
-        Math.round(Math.random()*70 + 30)
+        Math.round(Math.random()*70 + 30),
+        Math.round(Math.random() *3 + 0.5)/3
       ))
   }
 }
@@ -318,7 +319,8 @@ function createAsteroidsOrEnemys() {
         new Asteroid(
           Math.round(Math.random() * W),
           Math.round(Math.random() * H),
-          Math.round(Math.random()*70 + 30)
+          Math.round(Math.random()*70 + 30),
+          Math.round(Math.random() *3 + 0.5)/3
         )
       )
     }
@@ -330,7 +332,8 @@ function createAsteroidsOrEnemys() {
         new Asteroid(
           Math.round(Math.random() * W),
           Math.round(Math.random() * H),
-          Math.round(Math.random()*70 + 30)
+          Math.round(Math.random()*70 + 30),
+          Math.round(Math.random() *3 + 0.5)/3
         )
       );
     }
