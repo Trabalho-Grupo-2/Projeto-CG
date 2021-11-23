@@ -218,7 +218,7 @@ class Asteroid {
       new Asteroid(
         Math.round(Math.random() * W),
         Math.round(Math.random() * H),
-        Math.round(Math.random()*30 + 30)
+        Math.round(Math.random()*70 + 30)
       ))
   }
 }
@@ -318,7 +318,7 @@ function createAsteroidsOrEnemys() {
         new Asteroid(
           Math.round(Math.random() * W),
           Math.round(Math.random() * H),
-          Math.round(Math.random()*30 + 30)
+          Math.round(Math.random()*70 + 30)
         )
       );
     }
@@ -330,7 +330,7 @@ function createAsteroidsOrEnemys() {
         new Asteroid(
           Math.round(Math.random() * W),
           Math.round(Math.random() * H),
-          Math.round(Math.random()*30 + 30)
+          Math.round(Math.random()*70 + 30)
         )
       );
     }
