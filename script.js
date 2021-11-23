@@ -21,8 +21,10 @@ let score = 0,
   health = 3,
   playerName = "",
   secondSeconds = 999999999999999,
+  flag = true,
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
+var myVar
 
 //MOUSE COORDINATES//
 let x, y;
@@ -114,7 +116,7 @@ addEventListener("mousemove", (event) => {
 
 //DETECT CLICK FOR BACK BUTTON //
 
-addEventListener("click", (event) => {
+addEventListener("click", () => {
   if (backButtonBool == true && x >= 750 && x <= 800 && y >= 85 && y <= 127) {
     callMenu();
   }
@@ -303,7 +305,6 @@ function pushMissiles() {
   secondSeconds = firstSecond
 }
 
-
 //FUNCTION THAT CHOOSES IF WE CREATE AN ASTEROID OR AN ENEMY SHIP (10% CHANGE IT IS A SHIP)//
 
 function createAsteroidsOrEnemys() {
@@ -371,6 +372,8 @@ function insertName() {
   ctx.fillText("Insert Name", W / 2, H / 5);
   backButton();
 
+  clearInterval(myVar)
+  typeWritter(0)
 }
 
 function writeName(char) {
@@ -384,6 +387,24 @@ function writeName(char) {
   playerName += char
 
   ctx.fillText(playerName, W / 2, H / 2);
+
+  clearInterval(myVar)
+  typeWritter(ctx.measureText(playerName).width)
+
+}
+
+function typeWritter(nameLength) {
+  myVar = setInterval(function () {
+    if (flag) {
+      flag = false;
+      console.log("sim")
+      ctx.fillRect(W / 2 + nameLength, H / 2 + 7, 20, 6)
+    } else {
+      flag = true;
+      console.log("nao")
+      ctx.clearRect(W / 2 + nameLength, H / 2 + 7, 20, 6)
+    }
+  }, 800)
 }
 
 //FUNCTION TO DISPLAY LEADERBOARD ASSOCIATED TO HTML BUTTON//
@@ -396,7 +417,7 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Name:`, W/3.2, H / 3);
+  ctx.fillText(`Name:`, W / 3.2, H / 3);
   ctx.font = "30px llpixel"
   ctx.fillText(`Score:`, W / 1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
@@ -555,7 +576,7 @@ function render() {
     if (keys.SpaceBar == true) {
       pushMissiles();
     }
-    
+
     missiles.forEach((missile) => {
       missile.draw();
       missile.update();
