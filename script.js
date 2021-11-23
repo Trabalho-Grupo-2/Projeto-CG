@@ -20,7 +20,7 @@ let score = 0,
   scores = [],
   health = 3,
   playerName = "",
-  secondSeconds = 0,
+  secondSeconds = 999999999999999,
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 
@@ -496,7 +496,6 @@ function colisionHandler() {
     }
   }
 
-
   for (missile of missiles) {
     for (asteroid of asteroids) {
       if (checkColision(missile, asteroid)) {
@@ -545,21 +544,14 @@ function render() {
       myPlayer.turnRight();
     }
     if (keys.SpaceBar == true) {
-
       pushMissiles();
-
-      missiles.forEach((missile) => {
-        missile.draw();
-        missile.update();
-        missile.destroy();
-      });
     }
+    
     missiles.forEach((missile) => {
       missile.draw();
       missile.update();
       missile.destroy();
     });
-
 
     displayHUD();
     if (health == 0) {
