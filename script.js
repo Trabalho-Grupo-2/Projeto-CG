@@ -476,7 +476,9 @@ function colisionHandler() {
     if (checkColision(myPlayer, asteroid)) {
       asteroid.destroy();
       health--;
-
+      myPlayer.x = W / 2 -50;
+      myPlayer.y = H / 2 - 50;
+      myPlayer.angle = 0;
     }
   }
   for (ship of ships) {
