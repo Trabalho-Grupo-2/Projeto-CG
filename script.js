@@ -532,9 +532,9 @@ function render() {
     }
     if (keys.SpaceBar == true) {
 
-      if (missiles.length < 1) {
+      
         pushMissiles();
-      }
+      
       missiles.forEach((missile) => {
         missile.draw();
         missile.update();
