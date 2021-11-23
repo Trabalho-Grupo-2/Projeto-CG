@@ -320,7 +320,7 @@ function createAsteroidsOrEnemys() {
           Math.round(Math.random() * H),
           Math.round(Math.random()*70 + 30)
         )
-      );
+      )
     }
     enemyCount++;
 
