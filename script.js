@@ -15,7 +15,7 @@ ctx.font = "40px llpixel";
 let score = 0,
   acelleration = 0.1,
   angle = 0,
-  enemyCount = 10,
+  enemyCount = 20,
   chanceOfEncounter = 1,
   scores = [],
   health = 3,
@@ -194,63 +194,85 @@ const myPlayer = new Player(W / 2 - 50, H / 2 - 50);
 // ASTEROIDS CLASS DEFINITION WITH METHODS//
 
 class Asteroid {
-  constructor(x, y, size, xVelocity, yVelocity) {
-    this.x = x;
-    this.y = y;
-    this.xVelocity = xVelocity;
-    this.yVelocity = yVelocity;
-    this.image = images.asteroid;
-    this.size = size;
+  constructor() {
     this.startX = 0;
     this.startY = 0;
     this.signalX = 0;
     this.signalY = 0;
+    this.getStartLocation();
+    this.x = this.startX;
+    this.y = this.startY;
+    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5,
+    this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
+    this.image = images.asteroid;
+    this.size = Math.round(Math.random() * 70 + 30);
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
   update() {
-    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) {
+    if(this.x< -300 || this.x > W + 300 || this.y < -300 || this.y > H + 300){
       this.destroy();
-
     }
     this.x += this.xVelocity;
     this.y += this.yVelocity;
   }
   getStartLocation() {
-    this.signalX += Math.round(Math.random() * 1);
-    this.signalY += Math.round(Math.random() * 1);
+    this.signalX = Math.round(Math.random() * 1);
+    this.signalY = Math.round(Math.random() * 1);
     if (this.signalX == 0 && this.signalY == 0) {
-      this.startX =  Math.round(Math.random() * W);
+      this.startX = Math.round(Math.random() * W);
       this.startY = -200;
-      if(this.startX > W/2){
+      if (this.startX > W / 2) {
         this.xVelocity = -this.xVelocity
       }
     }
     if (this.signalX == 0 && this.signalY == 1) {
       this.startX = -200;
-      this.startY = H+200;
+      this.startY = Math.round(Math.random() * H);
+      if (this.startY > H / 2) {
+        this.yVelocity = -this.yVelocity
+      }
     }
     if (this.signalX == 1 && this.signalY == 0) {
-      this.startX = W+200;
-      this.startY = -200;
+      this.startX = W + 200;
+      this.startY = Math.round(Math.random() * H);
+      if (this.startY > H / 2) {
+        this.xVelocity = -this.xVelocity
+        this.yVelocity = -this.yVelocity
+      }
+      else {
+        this.xVelocity = -this.xVelocity
+      }
     }
     if (this.signalX == 1 && this.signalY == 1) {
-      this.startX = W+200;
-      this.startY = H+200;
+      this.startX = Math.round(Math.random() * W);
+      this.startY = H + 200;
+      if (this.startX > W / 2) {
+        this.xVelocity = -this.xVelocity
+        this.yVelocity = -this.yVelocity
+      }
+      else {
+        this.yVelocity = -this.yVelocity
+      }
     }
   }
   destroy() {
     asteroids.splice(asteroids.indexOf(this), 1);
-    this.getStartLocation();
+    let roll = Math.random();
+    if(roll > 0.1){
     asteroids.push(
       new Asteroid(
-        this.startX,
-        this.startY,
-        Math.round(Math.random() * 70 + 30),
-        Math.round(Math.random() * 3 + 0.5) / 5
       ))
+      asteroids[asteroids.length-1].getStartLocation()
   }
+  else{
+    ships.push(
+      new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
+    );
+  }
+}
+
 }
 
 //ENEMY SHIP CLASS DEFINITION //
@@ -346,10 +368,6 @@ function createAsteroidsOrEnemys() {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
-          Math.round(Math.random() * W),
-          Math.round(Math.random() * H),
-          Math.round(Math.random() * 70 + 30),
-          Math.round(Math.random() * 3 + 0.5) / 5
         )
       )
     }
@@ -359,12 +377,9 @@ function createAsteroidsOrEnemys() {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
-          Math.round(Math.random() * W),
-          Math.round(Math.random() * H),
-          Math.round(Math.random() * 70 + 30),
-          Math.round(Math.random() * 3 + 0.5) / 5
         )
       );
+
     }
 
   }
