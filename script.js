@@ -544,6 +544,7 @@ function render() {
         missile.destroy();
       });
     }
+    
 
     displayHUD();
     if (health == 0) {
