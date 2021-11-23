@@ -270,9 +270,7 @@ class Missile {
   draw() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-
-    ctx.arc(this.x + (myPlayer.size / 2), this.y - (myPlayer.size / 2), this.radius, 0, 2 * Math.PI)
-
+    ctx.arc(this.x + (myPlayer.size / 2), this.y - (myPlayer.size / 2), this.radius, 0, 2 * Math.PI)+
     ctx.fill();
     ctx.closePath();
   }
@@ -290,7 +288,7 @@ class Missile {
 //METHOD TO ADD MISSILES TO THE ARRAY //
 
 function pushMissiles() {
-  missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle, 500));
+  missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   console.log(missiles);
 }
 
@@ -386,7 +384,6 @@ function leaderBoard() {
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
     ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
-    console.log(i)
   }
 
 }
@@ -487,9 +484,10 @@ function colisionHandler() {
       health--;
     }
   }
+
+
   for (missile of missiles) {
     for (asteroid of asteroids) {
-
       if (checkColision(missile, asteroid)) {
         asteroid.destroy();
         missile.destroy();
