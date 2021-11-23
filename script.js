@@ -194,12 +194,12 @@ const myPlayer = new Player(W / 2 - 50, H / 2 - 50);
 // ASTEROIDS CLASS DEFINITION WITH METHODS//
 
 class Asteroid {
-  constructor(x, y) {
+  constructor(x, y,size) {
     this.x = x;
     this.y = y;
     this.velocity = 0.2;
     this.image = images.asteroid;
-    this.size = 30;
+    this.size = size;
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
@@ -217,7 +217,8 @@ class Asteroid {
     asteroids.push(
       new Asteroid(
         Math.round(Math.random() * W),
-        Math.round(Math.random() * H)
+        Math.round(Math.random() * H),
+        Math.round(Math.random()*70 + 30)
       ))
   }
 }
@@ -316,7 +317,8 @@ function createAsteroidsOrEnemys() {
       asteroids.push(
         new Asteroid(
           Math.round(Math.random() * W),
-          Math.round(Math.random() * H)
+          Math.round(Math.random() * H),
+          Math.round(Math.random()*70 + 30)
         )
       );
     }
@@ -327,7 +329,8 @@ function createAsteroidsOrEnemys() {
       asteroids.push(
         new Asteroid(
           Math.round(Math.random() * W),
-          Math.round(Math.random() * H)
+          Math.round(Math.random() * H),
+          Math.round(Math.random()*70 + 30)
         )
       );
     }
@@ -549,13 +552,20 @@ function render() {
     }
     if (keys.SpaceBar == true) {
 
-      pushMissiles();
 
+      
+        pushMissiles();
+      
       missiles.forEach((missile) => {
         missile.draw();
         missile.update();
         missile.destroy();
       });
+
+      if (missiles.length < 1) {
+       
+      }
+
     }
     missiles.forEach((missile) => {
       missile.draw();
