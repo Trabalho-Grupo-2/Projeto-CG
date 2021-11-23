@@ -380,12 +380,14 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Name:`, W/4, H / 3);
+  ctx.fillText(`Name:`, W/3.2, H / 3);
   ctx.font = "30px llpixel"
   ctx.fillText(`Score:`, W/1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
-    ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
+    ctx.fillText(`${myLeaderBoard[i-1].pName}`, W / 3.2, H / 3 + (50 * i))
+    ctx.font = "30px llpixel"
+    ctx.fillText(`${myLeaderBoard[i-1].pScore}`, W / 1.5, H / 3 + (50 * i))
   }
 
 }
