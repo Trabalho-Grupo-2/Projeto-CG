@@ -292,6 +292,7 @@ function pushMissiles() {
 
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
+  console.log(firstSecond);
 
   if (secondSeconds < firstSecond) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
