@@ -23,7 +23,6 @@ let score = 0,
   secondSeconds = 0,
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
-console.log(myLeaderBoard);
 
 //MOUSE COORDINATES//
 let x, y;
@@ -75,6 +74,7 @@ addEventListener("keydown", (event) => {
   }
   if (event.keyCode == 32) {
     keys.SpaceBar = true;
+    pushMissiles();
   }
   if (insertNameBool) {
     if (event.keyCode == 13) {
@@ -190,7 +190,6 @@ class Player {
 
 //CREATING NEW PLAYER FROM PREVIOUS CLASS//
 const myPlayer = new Player(W / 2 - 50, H / 2 - 50);
-console.log(myPlayer);
 
 // ASTEROIDS CLASS DEFINITION WITH METHODS//
 
@@ -215,7 +214,6 @@ class Asteroid {
   }
   destroy() {
     asteroids.splice(asteroids.indexOf(this), 1);
-    console.log(asteroids);
     asteroids.push(
       new Asteroid(
         Math.round(Math.random() * W),
@@ -271,7 +269,8 @@ class Missile {
     ctx.fillStyle = this.color;
     ctx.beginPath();
 
-    ctx.arc(this.x + (myPlayer.size / 2), this.y - (myPlayer.size / 2), this.radius, 0, 2 * Math.PI)
+    ctx.arc(this.x + (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
+
 
     ctx.fill();
     ctx.closePath();
@@ -290,6 +289,7 @@ class Missile {
 //METHOD TO ADD MISSILES TO THE ARRAY //
 
 function pushMissiles() {
+
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond-(firstSecond%1000))/1000;
 
@@ -300,6 +300,7 @@ function pushMissiles() {
   secondSeconds = firstSecond
 }
 
+
 //FUNCTION THAT CHOOSES IF WE CREATE AN ASTEROID OR AN ENEMY SHIP (10% CHANGE IT IS A SHIP)//
 
 function createAsteroidsOrEnemys() {
@@ -309,7 +310,7 @@ function createAsteroidsOrEnemys() {
       new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
     );
     enemyCount--;
-    console.log(ships);
+    
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
@@ -319,7 +320,7 @@ function createAsteroidsOrEnemys() {
       );
     }
     enemyCount++;
-    console.log(asteroids);
+    
   } else {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
@@ -329,7 +330,7 @@ function createAsteroidsOrEnemys() {
         )
       );
     }
-    console.log(asteroids);
+    
   }
 }
 
@@ -388,11 +389,12 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Name:                  Score:`, W / 2, H / 3);
+  ctx.fillText(`Name:`, W/4, H / 3);
+  ctx.font = "30px llpixel"
+  ctx.fillText(`Score:`, W/1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
     ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
-    console.log(i)
   }
 
 }
@@ -456,7 +458,6 @@ function insertScore() {
     pName: playerName,
     pScore: score
   });
-  console.log(myLeaderBoard);
   myLeaderBoard.sort(filterLeaderboard);
   if (myLeaderBoard.length > 5) {
     myLeaderBoard.pop();
@@ -490,12 +491,14 @@ function colisionHandler() {
   for (ship of ships) {
     if (checkColision(myPlayer, ship)) {
       ship.destroy();
+      ships.push(new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H)));
       health--;
     }
   }
+
+
   for (missile of missiles) {
     for (asteroid of asteroids) {
-
       if (checkColision(missile, asteroid)) {
         asteroid.destroy();
         missile.destroy();
@@ -507,6 +510,7 @@ function colisionHandler() {
     for (ship of ships) {
       if (checkColision(missile, ship)) {
         ship.destroy();
+        ship.push()
         score += 1000;
       }
     }
@@ -542,7 +546,7 @@ function render() {
     }
     if (keys.SpaceBar == true) {
 
-        pushMissiles();
+      pushMissiles();
 
       missiles.forEach((missile) => {
         missile.draw();
@@ -550,6 +554,12 @@ function render() {
         missile.destroy();
       });
     }
+    missiles.forEach((missile) => {
+      missile.draw();
+      missile.update();
+      missile.destroy();
+    });
+    
 
     displayHUD();
     if (health == 0) {
