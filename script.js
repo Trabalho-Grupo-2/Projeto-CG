@@ -269,7 +269,7 @@ class Missile {
     ctx.fillStyle = this.color;
     ctx.beginPath();
 
-    ctx.arc(this.x + (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2)* Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
+    ctx.arc(this.x + (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
 
 
     ctx.fill();
@@ -291,12 +291,12 @@ class Missile {
 function pushMissiles() {
 
   firstSecond = new Date().getTime();
-  firstSecond = (firstSecond-(firstSecond%1000))/1000;
+  firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
 
   if (secondSeconds < firstSecond) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   }
-  
+
   secondSeconds = firstSecond
 }
 
@@ -310,7 +310,7 @@ function createAsteroidsOrEnemys() {
       new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
     );
     enemyCount--;
-    
+
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
@@ -320,7 +320,7 @@ function createAsteroidsOrEnemys() {
       );
     }
     enemyCount++;
-    
+
   } else {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
@@ -330,7 +330,7 @@ function createAsteroidsOrEnemys() {
         )
       );
     }
-    
+
   }
 }
 
@@ -389,9 +389,9 @@ function leaderBoard() {
   ctx.textAlign = "center";
   ctx.fillText("Leaderboard", W / 2, H / 5);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Name:`, W/4, H / 3);
+  ctx.fillText(`Name:`, W / 4, H / 3);
   ctx.font = "30px llpixel"
-  ctx.fillText(`Score:`, W/1.5, H / 3);
+  ctx.fillText(`Score:`, W / 1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
     ctx.fillText(`${myLeaderBoard[i-1].pName}                  ${myLeaderBoard[i-1].pScore}`, W / 2, H / 3 + (50 * i))
@@ -559,7 +559,7 @@ function render() {
       missile.update();
       missile.destroy();
     });
-    
+
 
     displayHUD();
     if (health == 0) {
