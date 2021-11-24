@@ -442,13 +442,13 @@ function typeWritter(nameLength) {
     if (flag) {
       flag = false;
       console.log("sim")
-      ctx.fillRect(W / 2 + nameLength, H / 2 + 7, 20, 6)
+      ctx.fillRect(W / 2 + (nameLength)/2, H / 2 + 7, 20, 6)
     } else {
       flag = true;
       console.log("nao")
-      ctx.clearRect(W / 2 + nameLength, H / 2 + 7, 20, 6)
+      ctx.clearRect(W / 2 + (nameLength)/2, H / 2 + 7, 20, 6)
     }
-  }, 800)
+  }, 600)
 }
 
 //FUNCTION TO DISPLAY LEADERBOARD ASSOCIATED TO HTML BUTTON//
