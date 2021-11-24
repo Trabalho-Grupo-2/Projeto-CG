@@ -15,7 +15,7 @@ ctx.font = "40px llpixel";
 let score = 0,
   acelleration = 0.1,
   angle = 0,
-  enemyCount = 10,
+  enemyCount = 20,
   chanceOfEncounter = 1,
   scores = [],
   health = 3,
@@ -50,7 +50,7 @@ loadImage("heart");
 function loadImage(name) {
   images[name] = new Image();
   images[name].src = "sprites/" + name + ".png";
-  images[name].onload = function () {};
+  images[name].onload = function () { };
 }
 
 // CONTROLS//
@@ -196,34 +196,85 @@ const myPlayer = new Player(W / 2 - 50, H / 2 - 50);
 // ASTEROIDS CLASS DEFINITION WITH METHODS//
 
 class Asteroid {
-  constructor(x, y,size, velocity) {
-    this.x = x;
-    this.y = y;
-    this.velocity = velocity;
+  constructor() {
+    this.startX = 0;
+    this.startY = 0;
+    this.signalX = 0;
+    this.signalY = 0;
+    this.getStartLocation();
+    this.x = this.startX;
+    this.y = this.startY;
+    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5,
+    this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
     this.image = images.asteroid;
-    this.size = size;
+    this.size = Math.round(Math.random() * 70 + 30);
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
   update() {
-    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) {
+    if(this.x< -300 || this.x > W + 300 || this.y < -300 || this.y > H + 300){
       this.destroy();
-
     }
-    this.x += -this.velocity;
-    this.y += this.velocity;
+    this.x += this.xVelocity;
+    this.y += this.yVelocity;
+  }
+  getStartLocation() {
+    this.signalX = Math.round(Math.random() * 1);
+    this.signalY = Math.round(Math.random() * 1);
+    if (this.signalX == 0 && this.signalY == 0) {
+      this.startX = Math.round(Math.random() * W);
+      this.startY = -200;
+      if (this.startX > W / 2) {
+        this.xVelocity = -this.xVelocity
+      }
+    }
+    if (this.signalX == 0 && this.signalY == 1) {
+      this.startX = -200;
+      this.startY = Math.round(Math.random() * H);
+      if (this.startY > H / 2) {
+        this.yVelocity = -this.yVelocity
+      }
+    }
+    if (this.signalX == 1 && this.signalY == 0) {
+      this.startX = W + 200;
+      this.startY = Math.round(Math.random() * H);
+      if (this.startY > H / 2) {
+        this.xVelocity = -this.xVelocity
+        this.yVelocity = -this.yVelocity
+      }
+      else {
+        this.xVelocity = -this.xVelocity
+      }
+    }
+    if (this.signalX == 1 && this.signalY == 1) {
+      this.startX = Math.round(Math.random() * W);
+      this.startY = H + 200;
+      if (this.startX > W / 2) {
+        this.xVelocity = -this.xVelocity
+        this.yVelocity = -this.yVelocity
+      }
+      else {
+        this.yVelocity = -this.yVelocity
+      }
+    }
   }
   destroy() {
     asteroids.splice(asteroids.indexOf(this), 1);
+    let roll = Math.random();
+    if(roll > 0.1){
     asteroids.push(
       new Asteroid(
-        Math.round(Math.random() * W),
-        Math.round(Math.random() * H),
-        Math.round(Math.random()*70 + 30),
-        Math.round(Math.random() *3 + 0.5)/3
       ))
+      asteroids[asteroids.length-1].getStartLocation()
   }
+  else{
+    ships.push(
+      new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
+    );
+  }
+}
+
 }
 
 //ENEMY SHIP CLASS DEFINITION //
@@ -233,7 +284,7 @@ class Ship {
     this.x = x;
     this.y = y;
     this.angle = 0;
-    this.size = 30;
+    this.size = 50;
     this.image = images.enemy;
   }
   draw() {
@@ -265,7 +316,7 @@ class Missile {
     this.x = x;
     this.y = y;
     this.color = "white";
-    this.radius = 10;
+    this.size = 10;
     this.velocity = 2;
     this.angle = angle;
   }
@@ -273,7 +324,7 @@ class Missile {
     ctx.fillStyle = this.color;
     ctx.beginPath();
 
-    ctx.arc(this.x + (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.radius, 0, 2 * Math.PI)
+    ctx.arc(this.x + (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.size, 0, 2 * Math.PI)
 
 
     ctx.fill();
@@ -282,6 +333,7 @@ class Missile {
   update() {
     this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
     this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
+
   }
   destroy() {
     if (this.x < 0 || this.x > W || this.y < 0 || this.y > W) {
@@ -296,7 +348,6 @@ function pushMissiles() {
 
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
-  console.log(firstSecond);
 
   if (secondSeconds < firstSecond) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
@@ -318,10 +369,6 @@ function createAsteroidsOrEnemys() {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
-          Math.round(Math.random() * W),
-          Math.round(Math.random() * H),
-          Math.round(Math.random()*70 + 30),
-          Math.round(Math.random() *3 + 0.5)/3
         )
       )
     }
@@ -331,12 +378,9 @@ function createAsteroidsOrEnemys() {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
         new Asteroid(
-          Math.round(Math.random() * W),
-          Math.round(Math.random() * H),
-          Math.round(Math.random()*70 + 30),
-          Math.round(Math.random() *3 + 0.5)/3
         )
       );
+
     }
 
   }
@@ -422,9 +466,9 @@ function leaderBoard() {
   ctx.fillText(`Score:`, W / 1.5, H / 3);
   for (let i = 1; i <= myLeaderBoard.length; i++) {
     ctx.font = "30px llpixel"
-    ctx.fillText(`${myLeaderBoard[i-1].pName}`, W / 3.2, H / 3 + (50 * i))
+    ctx.fillText(`${myLeaderBoard[i - 1].pName}`, W / 3.2, H / 3 + (50 * i))
     ctx.font = "30px llpixel"
-    ctx.fillText(`${myLeaderBoard[i-1].pScore}`, W / 1.5, H / 3 + (50 * i))
+    ctx.fillText(`${myLeaderBoard[i - 1].pScore}`, W / 1.5, H / 3 + (50 * i))
   }
 
 }
@@ -530,6 +574,8 @@ function colisionHandler() {
     for (asteroid of asteroids) {
       if (checkColision(missile, asteroid)) {
         asteroid.destroy();
+        missile.x = 1000;
+        missile.y = 1000;
         missile.destroy();
         score += 100;
       }
@@ -539,7 +585,7 @@ function colisionHandler() {
     for (ship of ships) {
       if (checkColision(missile, ship)) {
         ship.destroy();
-        ship.push()
+        ships.push()
         score += 1000;
       }
     }
