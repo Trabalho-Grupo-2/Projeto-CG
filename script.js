@@ -21,10 +21,13 @@ let score = 0,
   health = 3,
   playerName = "",
   secondSeconds = 999999999999999,
-  spaceshipColor  = "spaceshipGreen"
+  spaceshipColor  = "spaceshipWhite"
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 var myVar
+
+//SPACESHIP COLOR
+let color = ["Blue", "Green", "Pink", "Red", "White", "Yellow"];
 
 //MOUSE COORDINATES//
 let x, y;
@@ -57,6 +60,7 @@ function loadImage(name) {
 }
 
 function loadSpaceship(name) {
+  console.log(name)
   images["spaceshipColor"] = new Image();
   images["spaceshipColor"].src = "sprites/" + name + ".png";
   images["spaceshipColor"].onload = function () { }
@@ -132,13 +136,12 @@ addEventListener("click", () => {
 
   if (arrowHeadBool == true) {
     if(x >= 190 && x <= 270 && y >= 320 && y <= 405) {
-      console.log("left")
+      changeColor(-1)
     }
     if(x >= 640 && x <= 720 && y >= 320 && y <= 405) {
-      console.log("right")
+      changeColor(1)
     }
-
-    }
+  }
 });
 
 // PLAYER CLASS WITH METHODS //
@@ -149,7 +152,7 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 2;
+    this.maxVelocity = 6;
     this.size = 50;
     this.image = images.spaceshipColor;
   }
@@ -206,6 +209,10 @@ class Player {
     if (this.x > W + this.size) {
       this.x = 0;
     }
+  }
+
+  changeColor() {
+    this.image = images.spaceshipColor;
   }
 }
 
@@ -420,9 +427,10 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
+  loadSpaceship(spaceshipColor);
+  myPlayer.changeColor()
   render();
 }
-
 
 //FUNCTION TO INSERT NAME ON CANVAS
 
@@ -511,6 +519,18 @@ function options() {
   ctx.drawImage(images.arrowHeadRight, ((W / 6) * 4) - 20, H / 2 - 40, 200, 200)
 }
 
+function changeColor(n) {
+  
+  let index = color.indexOf(spaceshipColor.replace("spaceship","")) + n
+
+  if(index == color.length) {
+    index = 0
+  } 
+  if(index == -1) {
+    index = color.length - 1
+  }
+  spaceshipColor = "spaceship" + color[index]
+}
 //FUNCTION TO CALL THE GAME MENU//
 
 function callMenu() {
