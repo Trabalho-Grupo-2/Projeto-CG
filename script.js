@@ -286,6 +286,8 @@ class Asteroid {
     }
   }
   destroy() {
+    console.log(asteroids);
+    console.log(ships)
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
     if (roll > 0.1) {
@@ -298,38 +300,99 @@ class Asteroid {
       );
     }
   }
-
 }
 
 //ENEMY SHIP CLASS DEFINITION //
 
 class Ship {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
+  constructor() {
+    this.startX = 0;
+    this.startY = 0;
+    this.signalX = 0;
+    this.signalY = 0;
+    this.getStartLocation();
+    this.x = this.startX;
+    this.y = this.startY;
     this.angle = 0;
     this.size = 50;
     this.image = images.enemy;
+    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5,
+      this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
   update() {
-    if (this.x > 0) {
-      this.x = W - this.size;
+    if (this.x < -this.size / 2) {
+      this.x = W;
     }
-    if (this.x - this.size > W) {
-      this.x = 0;
+    if (this.x > W + this.size / 2) {
+      this.x = -this.size / 2;
     }
-    if (this.y - this.size < 0) {
+    if (this.y < 0 - this.size / 2) {
       this.y = H;
     }
     if (this.y > H) {
-      this.y = this.size;
+      this.y = this.size / 2;
+    }
+    this.x += this.xVelocity;
+    this.y += this.yVelocity;
+  }
+  getStartLocation() {
+    this.signalX = Math.round(Math.random() * 1);
+    this.signalY = Math.round(Math.random() * 1);
+    if (this.signalX == 0 && this.signalY == 0) {
+      this.startX = Math.round(Math.random() * W);
+      this.startY = -200;
+      if (this.startX > W / 2) {
+        this.xVelocity = -this.xVelocity
+      }
+    }
+    if (this.signalX == 0 && this.signalY == 1) {
+      this.startX = -200;
+      this.startY = Math.round(Math.random() * H);
+      if (this.startY > H / 2) {
+        this.yVelocity = -this.yVelocity
+      }
+    }
+    if (this.signalX == 1 && this.signalY == 0) {
+      this.startX = W + 200;
+      this.startY = Math.round(Math.random() * H);
+      if (this.startY > H / 2) {
+        this.xVelocity = -this.xVelocity
+        this.yVelocity = -this.yVelocity
+      }
+      else {
+        this.xVelocity = -this.xVelocity
+      }
+    }
+    if (this.signalX == 1 && this.signalY == 1) {
+      this.startX = Math.round(Math.random() * W);
+      this.startY = H + 200;
+      if (this.startX > W / 2) {
+        this.xVelocity = -this.xVelocity
+        this.yVelocity = -this.yVelocity
+      }
+      else {
+        this.yVelocity = -this.yVelocity
+      }
     }
   }
+
   destroy() {
     ships.splice(ships.indexOf(this), 1);
+    let roll = Math.random();
+    if (roll > 0.05) {
+      asteroids.push(
+        new Asteroid(
+        ))
+      asteroids[asteroids.length - 1].getStartLocation()
+    }
+    else {
+      ships.push(
+        new Ship
+      );
+    }
   }
 }
 
@@ -386,7 +449,6 @@ function createAsteroidsOrEnemys() {
   chanceOfEncounter = Math.round(Math.random() * chanceOfEncounter);
   if (chanceOfEncounter > 0.9) {
     ships.push(
-      new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
     );
     enemyCount--;
 
@@ -405,6 +467,19 @@ function createAsteroidsOrEnemys() {
 
     }
 
+  }
+}
+
+function PowerupHandler() {
+  let roll = Math.random();
+  if(roll>1/3){
+
+  }
+  else if(roll>1/2){
+
+  }
+  else{
+    
   }
 }
 
@@ -625,7 +700,7 @@ function colisionHandler() {
   for (ship of ships) {
     if (checkColision(myPlayer, ship)) {
       ship.destroy();
-      ships.push(new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H)));
+      ships.push(new Ship);
       health--;
     }
   }
@@ -644,12 +719,14 @@ function colisionHandler() {
   for (missile of missiles) {
     for (ship of ships) {
       if (checkColision(missile, ship)) {
+        missile.x = 1000;
+        missile.y = 1000;
         ship.destroy();
-        ships.push()
         score += 1000;
       }
     }
   }
+
 }
 
 //RENDER FUNCTION//
@@ -665,6 +742,7 @@ function render() {
 
     ships.forEach(spaceship => {
       spaceship.draw();
+      spaceship.update();
     });
 
     myPlayer.turnShip();
