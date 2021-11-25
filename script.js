@@ -21,8 +21,8 @@ let score = 0,
   health = 3,
   playerName = "",
   secondSeconds = 999999999999999,
-  spaceshipColor  = "spaceshipWhite"
-  myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
+  spaceshipColor = "spaceshipWhite"
+myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 var myVar
 
@@ -36,7 +36,7 @@ let x, y;
 let gamestart = false,
   backButtonBool = false,
   insertNameBool = false;
-  arrowHeadBool = false;
+arrowHeadBool = false;
 
 // object arrays
 const asteroids = [],
@@ -56,16 +56,18 @@ loadImage("arrowHeadRight")
 function loadImage(name) {
   images[name] = new Image();
   images[name].src = "sprites/" + name + ".png";
-  images[name].onload = function () { };
+  images[name].onload = function () {};
 }
 
 function loadSpaceship(name) {
-  console.log(name)
   images["spaceshipColor"] = new Image();
   images["spaceshipColor"].src = "sprites/" + name + ".png";
-  images["spaceshipColor"].onload = function () { }
+  images["spaceshipColor"].onload = function () {}
 }
 
+for (var i = 0; i < color.length; i++) {
+  loadSpaceship("spaceship" + color[i])
+}
 // CONTROLS//
 
 let keys = {
@@ -135,10 +137,10 @@ addEventListener("click", () => {
   }
 
   if (arrowHeadBool == true) {
-    if(x >= 190 && x <= 270 && y >= 320 && y <= 405) {
+    if (x >= 190 && x <= 270 && y >= 320 && y <= 405) {
       changeColor(-1)
     }
-    if(x >= 640 && x <= 720 && y >= 320 && y <= 405) {
+    if (x >= 640 && x <= 720 && y >= 320 && y <= 405) {
       changeColor(1)
     }
   }
@@ -231,7 +233,7 @@ class Asteroid {
     this.x = this.startX;
     this.y = this.startY;
     this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5,
-    this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
+      this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
     this.image = images.asteroid;
     this.size = Math.round(Math.random() * 70 + 30);
   }
@@ -239,7 +241,7 @@ class Asteroid {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
   update() {
-    if(this.x< -300 || this.x > W + 300 || this.y < -300 || this.y > H + 300){
+    if (this.x < -300 || this.x > W + 300 || this.y < -300 || this.y > H + 300) {
       this.destroy();
     }
     this.x += this.xVelocity;
@@ -268,8 +270,7 @@ class Asteroid {
       if (this.startY > H / 2) {
         this.xVelocity = -this.xVelocity
         this.yVelocity = -this.yVelocity
-      }
-      else {
+      } else {
         this.xVelocity = -this.xVelocity
       }
     }
@@ -279,8 +280,7 @@ class Asteroid {
       if (this.startX > W / 2) {
         this.xVelocity = -this.xVelocity
         this.yVelocity = -this.yVelocity
-      }
-      else {
+      } else {
         this.yVelocity = -this.yVelocity
       }
     }
@@ -288,18 +288,16 @@ class Asteroid {
   destroy() {
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
-    if(roll > 0.1){
-    asteroids.push(
-      new Asteroid(
-      ))
-      asteroids[asteroids.length-1].getStartLocation()
+    if (roll > 0.1) {
+      asteroids.push(
+        new Asteroid())
+      asteroids[asteroids.length - 1].getStartLocation()
+    } else {
+      ships.push(
+        new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
+      );
+    }
   }
-  else{
-    ships.push(
-      new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
-    );
-  }
-}
 
 }
 
@@ -394,8 +392,7 @@ function createAsteroidsOrEnemys() {
 
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
-        new Asteroid(
-        )
+        new Asteroid()
       )
     }
     enemyCount++;
@@ -403,8 +400,7 @@ function createAsteroidsOrEnemys() {
   } else {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
-        new Asteroid(
-        )
+        new Asteroid()
       );
 
     }
@@ -423,12 +419,15 @@ function clear() {
 function startGame() {
   gamestart = true;
   insertNameBool = false;
+
   document.getElementById("menu").style.display = "none";
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
+
   loadSpaceship(spaceshipColor);
   myPlayer.changeColor()
+
   render();
 }
 
@@ -449,6 +448,7 @@ function insertName() {
   clearInterval(myVar)
   typeWritter(0)
 }
+
 function writeName(char) {
   clear();
 
@@ -473,10 +473,10 @@ function typeWritter(nameLength) {
   myVar = setInterval(function () {
     if (flag) {
       flag = false;
-      ctx.fillRect(W / 2 + (nameLength)/2, H / 2 + 7, 20, 6)
+      ctx.fillRect(W / 2 + (nameLength) / 2, H / 2 + 7, 20, 6)
     } else {
       flag = true;
-      ctx.clearRect(W / 2 + (nameLength)/2, H / 2 + 7, 20, 6)
+      ctx.clearRect(W / 2 + (nameLength) / 2, H / 2 + 7, 20, 6)
     }
   }, 600)
 }
@@ -508,10 +508,12 @@ function leaderBoard() {
 function options() {
   document.getElementById("menu").style.display = "none";
   clear();
+
   ctx.font = "45px llpixel";
   ctx.textAlign = "center";
   ctx.fillText("Options", W / 2, H / 5);
   backButton();
+  changeColorSprite();
 
   arrowHeadBool = true;
 
@@ -520,17 +522,25 @@ function options() {
 }
 
 function changeColor(n) {
-  
-  let index = color.indexOf(spaceshipColor.replace("spaceship","")) + n
 
-  if(index == color.length) {
+  let index = color.indexOf(spaceshipColor.replace("spaceship", "")) + n
+
+  if (index == color.length) {
     index = 0
-  } 
-  if(index == -1) {
+  }
+  if (index == -1) {
     index = color.length - 1
   }
   spaceshipColor = "spaceship" + color[index]
+
+  changeColorSprite();
 }
+
+function changeColorSprite() {
+  loadSpaceship(spaceshipColor);
+  ctx.drawImage(images.spaceshipColor, (W / 2) - 90, (H / 2) - 45, 180, 180)
+}
+
 //FUNCTION TO CALL THE GAME MENU//
 
 function callMenu() {
