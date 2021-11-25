@@ -21,10 +21,13 @@ let score = 0,
   health = 3,
   playerName = "",
   secondSeconds = 999999999999999,
-  flag = true,
-  myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
+  spaceshipColor = "spaceshipWhite"
+myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 var myVar
+
+//SPACESHIP COLOR
+let color = ["Blue", "Green", "Pink", "Red", "White", "Yellow"];
 
 //MOUSE COORDINATES//
 let x, y;
@@ -33,6 +36,7 @@ let x, y;
 let gamestart = false,
   backButtonBool = false,
   insertNameBool = false;
+arrowHeadBool = false;
 
 // object arrays
 const asteroids = [],
@@ -42,17 +46,28 @@ const asteroids = [],
 //sprite imports
 let images = {};
 loadImage("asteroid");
-loadImage("spaceship");
+loadSpaceship(spaceshipColor);
 loadImage("enemy");
 loadImage("undo");
 loadImage("heart");
+loadImage("arrowHeadLeft")
+loadImage("arrowHeadRight")
 
 function loadImage(name) {
   images[name] = new Image();
   images[name].src = "sprites/" + name + ".png";
-  images[name].onload = function () { };
+  images[name].onload = function () {};
 }
 
+function loadSpaceship(name) {
+  images["spaceshipColor"] = new Image();
+  images["spaceshipColor"].src = "sprites/" + name + ".png";
+  images["spaceshipColor"].onload = function () {}
+}
+
+for (var i = 0; i < color.length; i++) {
+  loadSpaceship("spaceship" + color[i])
+}
 // CONTROLS//
 
 let keys = {
@@ -120,6 +135,15 @@ addEventListener("click", () => {
   if (backButtonBool == true && x >= 750 && x <= 800 && y >= 85 && y <= 127) {
     callMenu();
   }
+
+  if (arrowHeadBool == true) {
+    if (x >= 190 && x <= 270 && y >= 320 && y <= 405) {
+      changeColor(-1)
+    }
+    if (x >= 640 && x <= 720 && y >= 320 && y <= 405) {
+      changeColor(1)
+    }
+  }
 });
 
 // PLAYER CLASS WITH METHODS //
@@ -130,9 +154,9 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 2;
+    this.maxVelocity = 6;
     this.size = 50;
-    this.image = images.spaceship;
+    this.image = images.spaceshipColor;
   }
 
   accelerate() {
@@ -188,6 +212,10 @@ class Player {
       this.x = 0;
     }
   }
+
+  changeColor() {
+    this.image = images.spaceshipColor;
+  }
 }
 
 //CREATING NEW PLAYER FROM PREVIOUS CLASS//
@@ -242,8 +270,7 @@ class Asteroid {
       if (this.startY > H / 2) {
         this.xVelocity = -this.xVelocity
         this.yVelocity = -this.yVelocity
-      }
-      else {
+      } else {
         this.xVelocity = -this.xVelocity
       }
     }
@@ -253,8 +280,7 @@ class Asteroid {
       if (this.startX > W / 2) {
         this.xVelocity = -this.xVelocity
         this.yVelocity = -this.yVelocity
-      }
-      else {
+      } else {
         this.yVelocity = -this.yVelocity
       }
     }
@@ -264,19 +290,16 @@ class Asteroid {
     console.log(ships)
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
-    if (roll > 0.05) {
+    if (roll > 0.1) {
       asteroids.push(
-        new Asteroid(
-        ))
+        new Asteroid())
       asteroids[asteroids.length - 1].getStartLocation()
-    }
-    else {
+    } else {
       ships.push(
-        new Ship(
-        ));
+        new Ship(Math.round(Math.random() * W), Math.round(Math.random() * H))
+      );
     }
   }
-
 }
 
 //ENEMY SHIP CLASS DEFINITION //
@@ -380,8 +403,8 @@ class Missile {
     this.x = x;
     this.y = y;
     this.color = "white";
-    this.size = 10;
-    this.velocity = 2;
+    this.size = 7;
+    this.velocity = 3;
     this.angle = angle;
   }
   draw() {
@@ -431,8 +454,7 @@ function createAsteroidsOrEnemys() {
 
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
-        new Asteroid(
-        )
+        new Asteroid()
       )
     }
     enemyCount++;
@@ -440,8 +462,7 @@ function createAsteroidsOrEnemys() {
   } else {
     for (let i = 0; i < enemyCount; i++) {
       asteroids.push(
-        new Asteroid(
-        )
+        new Asteroid()
       );
 
     }
@@ -473,12 +494,19 @@ function clear() {
 function startGame() {
   gamestart = true;
   insertNameBool = false;
+
   document.getElementById("menu").style.display = "none";
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
+
+  loadSpaceship(spaceshipColor);
+  myPlayer.changeColor()
+
   render();
 }
+
+//FUNCTION TO INSERT NAME ON CANVAS
 
 function insertName() {
   insertNameBool = true
@@ -513,16 +541,17 @@ function writeName(char) {
 
 }
 
+//FUNCTION THAT CREATES THE TYPEWRITTER EFFECT 
+
 function typeWritter(nameLength) {
+  let flag = false;
   myVar = setInterval(function () {
     if (flag) {
       flag = false;
-      console.log("sim")
-      ctx.fillRect(W / 2 + (nameLength)/2, H / 2 + 7, 20, 6)
+      ctx.fillRect(W / 2 + (nameLength) / 2, H / 2 + 7, 20, 6)
     } else {
       flag = true;
-      console.log("nao")
-      ctx.clearRect(W / 2 + (nameLength)/2, H / 2 + 7, 20, 6)
+      ctx.clearRect(W / 2 + (nameLength) / 2, H / 2 + 7, 20, 6)
     }
   }, 600)
 }
@@ -551,19 +580,48 @@ function leaderBoard() {
 
 //FUNCTION TO DISPLAY HELP MENU ASSOCIATED TO HTML BUTTON//
 
-function help() {
+function options() {
   document.getElementById("menu").style.display = "none";
   clear();
+
   ctx.font = "45px llpixel";
   ctx.textAlign = "center";
-  ctx.fillText("Help", W / 2, H / 5);
+  ctx.fillText("Options", W / 2, H / 5);
   backButton();
+  changeColorSprite();
+
+  arrowHeadBool = true;
+
+  ctx.drawImage(images.arrowHeadLeft, (W / 6) - 20, H / 2 - 40, 200, 200)
+  ctx.drawImage(images.arrowHeadRight, ((W / 6) * 4) - 20, H / 2 - 40, 200, 200)
+}
+
+function changeColor(n) {
+
+  let index = color.indexOf(spaceshipColor.replace("spaceship", "")) + n
+
+  if (index == color.length) {
+    index = 0
+  }
+  if (index == -1) {
+    index = color.length - 1
+  }
+  spaceshipColor = "spaceship" + color[index]
+
+  changeColorSprite();
+}
+
+function changeColorSprite() {
+  loadSpaceship(spaceshipColor);
+  ctx.drawImage(images.spaceshipColor, (W / 2) - 90, (H / 2) - 45, 180, 180)
 }
 
 //FUNCTION TO CALL THE GAME MENU//
 
 function callMenu() {
   clear();
+  clearInterval(myVar)
+
   health = 3;
   document.getElementById("menu").style.display = "inline-block";
   let bg = document.getElementById("canvas1");
@@ -571,6 +629,7 @@ function callMenu() {
   bg.style.backgroundSize = "cover";
   gamestart = false;
   insertNameBool = false;
+  arrowHeadBool = false;
 }
 
 //FUNCTION THAT DEFINES THE BACKBUTTON//

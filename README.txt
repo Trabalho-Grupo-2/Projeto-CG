@@ -12,12 +12,13 @@ DONE:
 -> Asteroids (direção aleatoria);
 -> Misseis da Nave do jogador;
 -> Colisões objectos com misseis;
+-> Opção de mudar a cor do Jogador;
 
 IN PROGRESS:
 
 -> Controlos(deslizar);
 -> Naves Inimigas (misseis);
--> Help Menu;
+
 
 TODO:
 
