@@ -154,7 +154,7 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 6;
+    this.maxVelocity = 2;
     this.size = 50;
     this.image = images.spaceshipColor;
   }
@@ -232,10 +232,10 @@ class Asteroid {
     this.getStartLocation();
     this.x = this.startX;
     this.y = this.startY;
-    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5,
-      this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
+    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 3;
+    this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 3;
     this.image = images.asteroid;
-    this.size = Math.round(Math.random() * 70 + 30);
+    this.size = Math.round(Math.random() * 50 + 50);
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
@@ -290,7 +290,7 @@ class Asteroid {
     console.log(ships)
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
-    if (roll > 0.1) {
+    if (roll > 0.02) {
       asteroids.push(
         new Asteroid())
       asteroids[asteroids.length - 1].getStartLocation()
@@ -382,7 +382,7 @@ class Ship {
   destroy() {
     ships.splice(ships.indexOf(this), 1);
     let roll = Math.random();
-    if (roll > 0.05) {
+    if (roll > 0.02) {
       asteroids.push(
         new Asteroid(
         ))
@@ -473,13 +473,13 @@ function createAsteroidsOrEnemys() {
 function PowerupHandler() {
   let roll = Math.random();
   if(roll>1/3){
-
+    //health//
   }
   else if(roll>1/2){
-
+    //double shooting //
   }
   else{
-    
+    // asteroids get slower//
   }
 }
 
@@ -678,10 +678,10 @@ createAsteroidsOrEnemys();
 
 function checkColision(obj1, obj2) {
   if (
-    obj1.x + obj1.size / 2 >= obj2.x - obj2.size / 2 &&
-    obj1.x - obj1.size / 2 <= obj2.x + obj2.size / 2 &&
-    obj1.y + obj1.size / 2 >= obj2.y - obj2.size / 2 &&
-    obj1.y - obj1.size / 2 <= obj2.y + obj2.size / 2
+    obj1.x + obj1.size >= obj2.x &&
+    obj1.x  <= obj2.x + obj2.size &&
+    obj1.y + obj1.size >= obj2.y &&
+    obj1.y <= obj2.y + obj2.size
   ) {
     return true;
   }
