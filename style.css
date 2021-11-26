@@ -95,3 +95,12 @@ body{
     left: 0;
     display: inline-block;
 }
+
+.title{
+    font-size:10px;
+    transition: font-size 4s;
+}
+
+.title:hover{
+    font-size: 100px;
+}
