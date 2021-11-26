@@ -235,7 +235,7 @@ class Asteroid {
     this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 3;
     this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 3;
     this.image = images.asteroid;
-    this.size = Math.round(Math.random() * 70 + 30);
+    this.size = Math.round(Math.random() * 50 + 50);
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
@@ -678,10 +678,10 @@ createAsteroidsOrEnemys();
 
 function checkColision(obj1, obj2) {
   if (
-    obj1.x + obj1.size / 2 >= obj2.x - obj2.size / 2 &&
-    obj1.x - obj1.size / 2 <= obj2.x + obj2.size / 2 &&
-    obj1.y + obj1.size / 2 >= obj2.y - obj2.size / 2 &&
-    obj1.y - obj1.size / 2 <= obj2.y + obj2.size / 2
+    obj1.x + obj1.size >= obj2.x &&
+    obj1.x  <= obj2.x + obj2.size &&
+    obj1.y + obj1.size >= obj2.y &&
+    obj1.y <= obj2.y + obj2.size
   ) {
     return true;
   }
