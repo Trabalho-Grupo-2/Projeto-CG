@@ -291,8 +291,8 @@ class Asteroid {
     }
   }
   destroy() {
-    console.log(asteroids);
-    console.log(ships)
+    //console.log(asteroids);
+    //console.log(ships)
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
     if (roll > 0.02) {
