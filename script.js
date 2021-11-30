@@ -22,7 +22,6 @@ let score = 0,
   playerName = "",
   secondSeconds = 999999999999999,
   spaceshipColor = "spaceshipWhite",
-  myPowerUp,
 myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 var myVar
@@ -43,6 +42,7 @@ arrowHeadBool = false;
 const asteroids = [],
   ships = [],
   missiles = [];
+  powerUps = [];
 
 //sprite imports
 let images = {};
@@ -482,19 +482,22 @@ class PowerUp {
   draw(){
     ctx.drawImage(this.image, Math.random() * W, Math.random() * H, 20, 20);
   }
+  destroy(){
+    powerUps.pop();
+  }
 }
 
 function PowerupHandler() {
   let roll = Math.random();
   if(roll < 1/3){
-    myPowerUp = new PowerUp(images.heartred);
+    powerUps.push( new PowerUp(images.heartred));
     health++;
   }
   else if(roll < 2/3){
-    myPowerUp = new PowerUp(images.bullet);
+    powerUps.push( new PowerUp(images.bullet));
   }
   else{
-    myPowerUp = new PowerUp(images.clock);
+    powerUps.push( new PowerUp(images.clock));
   }
 }
 
@@ -739,6 +742,11 @@ function colisionHandler() {
         ship.destroy();
         score += 1000;
       }
+    }
+  }
+  for (powerUp of powerUps){
+    if (checkColision(myPlayer,powerUp)){
+      
     }
   }
 
