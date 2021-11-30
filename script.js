@@ -441,10 +441,10 @@ function pushMissiles() {
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
 
-  if (secondSeconds < firstSecond && pushMissiles ==false) {
+  if (secondSeconds < firstSecond && backShoot ==false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   }
-  if (secondSeconds < firstSecond && pushMissiles ==true) {
+  if (secondSeconds < firstSecond && backShoot ==true) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
     missiles.push(new Missile(myPlayer.x, myPlayer.y,myPlayer.angle *-1));
   }
@@ -806,6 +806,11 @@ function render() {
       missile.update();
       missile.destroy();
     });
+
+    powerUps.forEach(powerUp => {
+      powerUp.draw();
+      powerUp.destroy();
+    })
 
     displayHUD();
     if (health == 0) {
