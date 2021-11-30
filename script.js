@@ -744,6 +744,11 @@ function colisionHandler() {
       }
     }
   }
+  for (powerUp of powerUps){
+    if (checkColision(myPlayer,powerUp)){
+      
+    }
+  }
 
 }
 
