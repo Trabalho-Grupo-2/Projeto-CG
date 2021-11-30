@@ -22,6 +22,7 @@ let score = 0,
   playerName = "",
   secondSeconds = 999999999999999,
   spaceshipColor = "spaceshipWhite",
+  backShoot = false,
 myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 var myVar, myVar2
@@ -440,9 +441,14 @@ function pushMissiles() {
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
 
-  if (secondSeconds < firstSecond) {
+  if (secondSeconds < firstSecond && backShoot ==false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   }
+  if (secondSeconds < firstSecond && backShoot ==true) {
+    missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
+    missiles.push(new Missile(myPlayer.x, myPlayer.y,myPlayer.angle *-1));
+  }
+  
 
   secondSeconds = firstSecond
 }
@@ -755,7 +761,20 @@ function colisionHandler() {
   }
   for (powerUp of powerUps){
     if (checkColision(myPlayer,powerUp)){
-      
+      PowerupHandler();
+      if(powerUp.image == images.heartred){
+        health++;
+      }
+      if(powerUp.image == images.bullet){
+        backShoot = true;
+
+      }
+      if(powerUp.image == images.clock){
+        asteroids.forEach(function (asteroid) {
+          asteroid.xVelocity = asteroid.xVelocity /2;
+          asteroid.yVelocity = asteroid.yVelocity /2;
+        })
+      }
     }
   }
 
@@ -798,6 +817,11 @@ function render() {
       missile.update();
       missile.destroy();
     });
+
+    powerUps.forEach(powerUp => {
+      powerUp.draw();
+      powerUp.destroy();
+    })
 
     displayHUD();
     if (health == 0) {
