@@ -491,7 +491,6 @@ function PowerupHandler() {
   let roll = Math.random();
   if(roll < 1/3){
     powerUps.push( new PowerUp(images.heartred));
-    health++;
   }
   else if(roll < 2/3){
     powerUps.push( new PowerUp(images.bullet));
@@ -746,7 +745,15 @@ function colisionHandler() {
   }
   for (powerUp of powerUps){
     if (checkColision(myPlayer,powerUp)){
-      
+      if(powerUp.image == images.heartred){
+        health++;
+      }
+      if(powerUp.image == images.bullet){
+
+      }
+      if(powerUp.image == images.clock){
+
+      }
     }
   }
 
