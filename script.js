@@ -24,7 +24,7 @@ let score = 0,
   spaceshipColor = "spaceshipWhite",
 myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
-var myVar
+var myVar, myVar2
 
 //SPACESHIP COLOR
 let color = ["Blue", "Green", "Pink", "Red", "White", "Yellow"];
@@ -35,13 +35,13 @@ let x, y;
 //GAMESTART AND BACKBUTTON CONTROL BOOL
 let gamestart = false,
   backButtonBool = false,
-  insertNameBool = false;
-arrowHeadBool = false;
+  insertNameBool = false,
+  arrowHeadBool = false;
 
 // object arrays
 const asteroids = [],
   ships = [],
-  missiles = [];
+  missiles = [],
   powerUps = [];
 
 //sprite imports
@@ -488,17 +488,23 @@ class PowerUp {
 }
 
 function PowerupHandler() {
-  let roll = Math.random();
-  if(roll < 1/3){
-    powerUps.push( new PowerUp(images.heartred));
-    health++;
-  }
-  else if(roll < 2/3){
-    powerUps.push( new PowerUp(images.bullet));
-  }
-  else{
-    powerUps.push( new PowerUp(images.clock));
-  }
+  myVar2 = setInterval(() => {
+    let roll = Math.random();
+    
+    if(roll < 1/3){
+      console.log(1)
+      powerUps.push( new PowerUp(images.heartred));
+      health++;
+    }
+    else if(roll < 2/3){
+      console.log(2)
+      powerUps.push( new PowerUp(images.bullet));
+    }
+    else{
+      console.log(3)
+      powerUps.push( new PowerUp(images.clock));
+    }
+  }, 2000);
 }
 
 //FUNCTION TO CLEAR CANVAS//
@@ -517,6 +523,8 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
+
+  PowerupHandler()
 
   loadSpaceship(spaceshipColor);
   myPlayer.changeColor()
@@ -639,6 +647,7 @@ function changeColorSprite() {
 function callMenu() {
   clear();
   clearInterval(myVar)
+  clearInterval(myVar2)
 
   health = 3;
   document.getElementById("menu").style.display = "inline-block";
