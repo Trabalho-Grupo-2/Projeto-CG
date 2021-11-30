@@ -751,6 +751,7 @@ function colisionHandler() {
   }
   for (powerUp of powerUps){
     if (checkColision(myPlayer,powerUp)){
+      PowerupHandler();
       if(powerUp.image == images.heartred){
         health++;
       }
