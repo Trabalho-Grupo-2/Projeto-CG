@@ -808,7 +808,7 @@ function render() {
       missile.destroy();
     });
 
-    powerUps.forEach(powerUp => {
+    powerUps.forEach((powerUp) => {
       powerUp.draw();
       powerUp.destroy();
     })
