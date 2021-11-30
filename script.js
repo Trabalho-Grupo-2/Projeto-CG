@@ -54,6 +54,8 @@ loadImage("heart");
 loadImage("arrowHeadLeft");
 loadImage("arrowHeadRight");
 loadImage("heartred");
+loadImage("bullet");
+loadImage("clock");
 
 function loadImage(name) {
   images[name] = new Image();
@@ -489,10 +491,10 @@ function PowerupHandler() {
     health++;
   }
   else if(roll < 2/3){
-    //double shooting //
+    myPowerUp = new PowerUp(images.bullet);
   }
   else{
-    // asteroids get slower//
+    myPowerUp = new PowerUp(images.clock);
   }
 }
 
