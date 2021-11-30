@@ -21,7 +21,8 @@ let score = 0,
   health = 3,
   playerName = "",
   secondSeconds = 999999999999999,
-  spaceshipColor = "spaceshipWhite"
+  spaceshipColor = "spaceshipWhite",
+  myPowerUp,
 myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 var myVar
@@ -50,8 +51,9 @@ loadSpaceship(spaceshipColor);
 loadImage("enemy");
 loadImage("undo");
 loadImage("heart");
-loadImage("arrowHeadLeft")
-loadImage("arrowHeadRight")
+loadImage("arrowHeadLeft");
+loadImage("arrowHeadRight");
+loadImage("heartred");
 
 function loadImage(name) {
   images[name] = new Image();
@@ -470,12 +472,23 @@ function createAsteroidsOrEnemys() {
   }
 }
 
+class PowerUp {
+  constructor(image){
+    this.image = image;
+    this.duration = 5;
+  }
+  draw(){
+    ctx.drawImage(this.image, Math.random() * W, Math.random() * H, 20, 20);
+  }
+}
+
 function PowerupHandler() {
   let roll = Math.random();
-  if(roll>1/3){
-    //health//
+  if(roll < 1/3){
+    myPowerUp = new PowerUp(images.heartred);
+    health++;
   }
-  else if(roll>1/2){
+  else if(roll < 2/3){
     //double shooting //
   }
   else{
