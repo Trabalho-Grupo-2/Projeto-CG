@@ -291,8 +291,8 @@ class Asteroid {
     }
   }
   destroy() {
-    console.log(asteroids);
-    console.log(ships)
+    //console.log(asteroids);
+    //console.log(ships)
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
     if (roll > 0.02) {
@@ -441,10 +441,10 @@ function pushMissiles() {
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
 
-  if (secondSeconds < firstSecond && backShoot ==false) {
+  if (secondSeconds < firstSecond && backShoot == false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   }
-  if (secondSeconds < firstSecond && backShoot ==true) {
+  if (secondSeconds < firstSecond && backShoot == true) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
     missiles.push(new Missile(myPlayer.x, myPlayer.y,myPlayer.angle *-1));
   }
@@ -486,7 +486,8 @@ class PowerUp {
     this.duration = 5;
   }
   draw(){
-    ctx.drawImage(this.image, Math.random() * W, Math.random() * H, 20, 20);
+    console.log(this.image)
+    ctx.drawImage(this.image, Math.random() * W, Math.random() * H, 50, 50);
   }
   destroy(){
     powerUps.pop();
@@ -760,7 +761,6 @@ function colisionHandler() {
   }
   for (powerUp of powerUps){
     if (checkColision(myPlayer,powerUp)){
-      PowerupHandler();
       if(powerUp.image == images.heartred){
         health++;
       }
@@ -819,6 +819,7 @@ function render() {
     });
 
     powerUps.forEach((powerUp) => {
+      console.log(powerUp);
       powerUp.draw();
       powerUp.destroy();
     })
@@ -829,6 +830,6 @@ function render() {
       callMenu();
       window.location.reload()
     }
-  }
+  }1
   requestAnimationFrame(render);
 }
