@@ -530,7 +530,6 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
 
-  PowerupHandler()
 
   loadSpaceship(spaceshipColor);
   myPlayer.changeColor()
@@ -786,6 +785,7 @@ function render() {
   if (gamestart == true) {
     clear();
     colisionHandler();
+    PowerupHandler();
     asteroids.forEach((asteroid) => {
       asteroid.draw();
       asteroid.update();
