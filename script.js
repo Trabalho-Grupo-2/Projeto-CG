@@ -923,6 +923,6 @@ function render() {
       callMenu();
       window.location.reload()
     }
-  } 1
+  }
   requestAnimationFrame(render);
 }
