@@ -115,3 +115,34 @@ body{
     }
 }
 
+#playButton, #optionsButton {
+    animation: play 2s ease-out;
+
+}
+
+@keyframes play {
+    from{
+        transform: translateX(-350px);
+
+    }
+    to{
+        transform: translateX(0);
+
+    }
+    
+}
+#leaderBoardButton{
+    animation: leaderBoard 2s ease-out;
+
+}
+
+@keyframes leaderBoard {
+    from{
+        transform: translateX(350px);
+
+    }
+    to{
+        transform: translateX(0);
+
+    }
+}
