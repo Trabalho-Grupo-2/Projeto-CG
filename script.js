@@ -328,7 +328,7 @@ class Ship {
     this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5;
     this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5;
     this.shoot = setInterval(() => {
-      enemyMissiles.push(new EnemyMissile(this.x+ this.size/2, this.y+this.size/2, (Math.atan2(myPlayer.y , myPlayer.x) - Math.atan2(this.y , this.x))* (180/Math.PI)));
+      enemyMissiles.push(new EnemyMissile(this.x+ this.size/2, this.y+this.size/2,(Math.random() * 360) * (180/Math.PI)));
 },1000)
 
   }
