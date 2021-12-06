@@ -13,6 +13,7 @@ DONE:
 -> Misseis da Nave do jogador;
 -> Colisões objectos com misseis;
 -> Opção de mudar a cor do Jogador;
+-> PowerUps;
 
 IN PROGRESS:
 
@@ -22,4 +23,3 @@ IN PROGRESS:
 
 TODO:
 
--> PowerUps;
