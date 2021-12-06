@@ -165,7 +165,7 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 6;
+    this.maxVelocity = 3;
     this.minVelocity = 0
     this.size = 50;
     this.image = images.spaceshipColor;
@@ -796,6 +796,7 @@ function colisionHandler() {
       myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
       myPlayer.angle = 0;
+      myPlayer.velocity = 0;
     }
   }
   for (ship of ships) {
@@ -833,6 +834,7 @@ function colisionHandler() {
       myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
       myPlayer.angle = 0;
+      myPlayer.velocity = 0;
       enemyMissile.x = -300;
       enemyMissile.y = -300;
       enemyMissile.destroy();
