@@ -67,13 +67,13 @@ loadImage("clock");
 function loadImage(name) {
   images[name] = new Image();
   images[name].src = "sprites/" + name + ".png";
-  images[name].onload = function () { };
+  images[name].onload = function () {};
 }
 
 function loadSpaceship(name) {
   images["spaceshipColor"] = new Image();
   images["spaceshipColor"].src = "sprites/" + name + ".png";
-  images["spaceshipColor"].onload = function () { }
+  images["spaceshipColor"].onload = function () {}
 }
 
 for (var i = 0; i < color.length; i++) {
@@ -332,8 +332,8 @@ class Ship {
     this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5;
     this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5;
     this.shoot = setInterval(() => {
-      enemyMissiles.push(new EnemyMissile(this.x+ this.size/2, this.y+this.size/2,(Math.random() * 360) * (180/Math.PI)));
-},1000)
+      enemyMissiles.push(new EnemyMissile(this.x + this.size / 2, this.y + this.size / 2, (Math.random() * 360) * (180 / Math.PI)));
+    }, 1000)
 
   }
   draw() {
@@ -378,8 +378,7 @@ class Ship {
       if (this.startY > H / 2) {
         this.xVelocity = -this.xVelocity
         this.yVelocity = -this.yVelocity
-      }
-      else {
+      } else {
         this.xVelocity = -this.xVelocity
       }
     }
@@ -389,8 +388,7 @@ class Ship {
       if (this.startX > W / 2) {
         this.xVelocity = -this.xVelocity
         this.yVelocity = -this.yVelocity
-      }
-      else {
+      } else {
         this.yVelocity = -this.yVelocity
       }
     }
@@ -402,11 +400,9 @@ class Ship {
     let roll = Math.random();
     if (roll > 0.02) {
       asteroids.push(
-        new Asteroid(
-        ))
+        new Asteroid())
       asteroids[asteroids.length - 1].getStartLocation()
-    }
-    else {
+    } else {
       ships.push(
         new Ship
       );
@@ -501,8 +497,7 @@ function pushMissiles() {
 function createAsteroidsOrEnemys() {
   chanceOfEncounter = Math.round(Math.random() * chanceOfEncounter);
   if (chanceOfEncounter > 0.9) {
-    ships.push(
-    );
+    ships.push();
     enemyCount--;
 
     for (let i = 0; i < enemyCount; i++) {
@@ -554,12 +549,10 @@ function PowerupHandler() {
     if (roll < 1 / 3) {
       powerUps.push(new PowerUp(images.heartred));
 
-    }
-    else if (roll < 2 / 3) {
+    } else if (roll < 2 / 3) {
       powerUps.push(new PowerUp(images.bullet));
 
-    }
-    else {
+    } else {
       powerUps.push(new PowerUp(images.clock));
     }
   }, 10000)
@@ -823,8 +816,8 @@ function colisionHandler() {
       }
     }
   }
-  for ( enemyMissile of enemyMissiles) {
-    if( checkColision(myPlayer,enemyMissile)){
+  for (enemyMissile of enemyMissiles) {
+    if (checkColision(myPlayer, enemyMissile)) {
       health--;
       myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
@@ -889,7 +882,7 @@ function render() {
 
     myPlayer.turnShip();
     myPlayer.update();
-    
+
     if (keys.ArrowUp == false) {
       myPlayer.brake();
     }
