@@ -161,7 +161,7 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 2;
+    this.maxVelocity = 6;
     this.size = 50;
     this.image = images.spaceshipColor;
   }
@@ -868,7 +868,10 @@ function render() {
 
     myPlayer.turnShip();
     myPlayer.update();
-
+    
+    if (keys.ArrowUp == false) {
+      myPlayer.brake();
+    }
     if (keys.ArrowUp == true) {
       myPlayer.accelerate();
     }
