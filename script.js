@@ -23,9 +23,10 @@ let score = 0,
   secondSeconds = 999999999999999,
   spaceshipColor = "spaceshipWhite",
   backShoot = false,
-myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
-
-var myVar, myVar2
+  InsertNameAnimationTimer,
+  powerUpTimer,
+  pwSlowAsteroids = false,
+  myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 //SPACESHIP COLOR
 let color = ["Blue", "Green", "Pink", "Red", "White", "Yellow"];
@@ -43,7 +44,8 @@ let gamestart = false,
 const asteroids = [],
   ships = [],
   missiles = [],
-  powerUps = [];
+  powerUps = [],
+  enemyMissiles = [];
 
 //sprite imports
 let images = {};
@@ -61,13 +63,13 @@ loadImage("clock");
 function loadImage(name) {
   images[name] = new Image();
   images[name].src = "sprites/" + name + ".png";
-  images[name].onload = function () {};
+  images[name].onload = function () { };
 }
 
 function loadSpaceship(name) {
   images["spaceshipColor"] = new Image();
   images["spaceshipColor"].src = "sprites/" + name + ".png";
-  images["spaceshipColor"].onload = function () {}
+  images["spaceshipColor"].onload = function () { }
 }
 
 for (var i = 0; i < color.length; i++) {
@@ -159,7 +161,7 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 2;
+    this.maxVelocity = 6;
     this.size = 50;
     this.image = images.spaceshipColor;
   }
@@ -241,6 +243,10 @@ class Asteroid {
     this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 3;
     this.image = images.asteroid;
     this.size = Math.round(Math.random() * 50 + 50);
+    if (pwSlowAsteroids) {
+      this.xVelocity = this.xVelocity / 2;
+      this.yVelocity = this.yVelocity / 2
+    }
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
@@ -291,8 +297,6 @@ class Asteroid {
     }
   }
   destroy() {
-    //console.log(asteroids);
-    //console.log(ships)
     asteroids.splice(asteroids.indexOf(this), 1);
     let roll = Math.random();
     if (roll > 0.02) {
@@ -321,8 +325,13 @@ class Ship {
     this.angle = 0;
     this.size = 50;
     this.image = images.enemy;
-    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5,
-      this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5
+    this.xVelocity = Math.round(Math.random() * 3 + 0.5) / 5;
+    this.yVelocity = Math.round(Math.random() * 3 + 0.5) / 5;
+    this.shoot = setInterval(() => {
+      enemyMissiles.push(new EnemyMissile(this.x+ this.size/2, this.y+this.size/2, (Math.atan2(myPlayer.y , myPlayer.x) - Math.atan2(this.y , this.x))* (180/Math.PI)));
+      console.log((Math.atan2(myPlayer.y , myPlayer.x) - Math.atan2(this.y , this.x))* (180/Math.PI));
+},1000)
+
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
@@ -386,6 +395,7 @@ class Ship {
 
   destroy() {
     ships.splice(ships.indexOf(this), 1);
+    clearInterval(this.shoot);
     let roll = Math.random();
     if (roll > 0.02) {
       asteroids.push(
@@ -397,6 +407,33 @@ class Ship {
       ships.push(
         new Ship
       );
+    }
+  }
+}
+
+class EnemyMissile {
+  constructor(x, y, angle) {
+    this.x = x;
+    this.y = y;
+    this.color = "red";
+    this.size = 7;
+    this.velocity = 3;
+    this.angle = angle;
+  }
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x + (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.y - (myPlayer.size / 2) * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2)), this.size, 0, 2 * Math.PI)
+    ctx.fill();
+    ctx.closePath();
+  }
+  update() {
+    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
+    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
+  }
+  destroy() {
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > W) {
+      enemyMissiles.splice(enemyMissiles.indexOf(this), 1);
     }
   }
 }
@@ -441,14 +478,15 @@ function pushMissiles() {
   firstSecond = new Date().getTime();
   firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
 
-  if (secondSeconds < firstSecond && backShoot ==false) {
+  if (secondSeconds < firstSecond && backShoot == false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
   }
-  if (secondSeconds < firstSecond && backShoot ==true) {
+  if (secondSeconds < firstSecond && backShoot == true) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
-    missiles.push(new Missile(myPlayer.x, myPlayer.y,myPlayer.angle *-1));
+    missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle + 180));
+
   }
-  
+
 
   secondSeconds = firstSecond
 }
@@ -481,36 +519,41 @@ function createAsteroidsOrEnemys() {
 }
 
 class PowerUp {
-  constructor(image){
+  constructor(image) {
     this.image = image;
-    this.duration = 5;
+    this.size = 30;
+    this.x = this.size / 2 + (Math.random() * (W - this.size / 2));
+    this.y = this.size / 2 + (Math.random() * (H - this.size / 2));
+    setTimeout(() => {
+      this.destroy();
+    }, 5000)
+
   }
-  draw(){
-    ctx.drawImage(this.image, Math.random() * W, Math.random() * H, 20, 20);
+  draw() {
+    ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
-  destroy(){
+  destroy() {
     powerUps.pop();
+    console.log("destroyed");
   }
 }
 
 function PowerupHandler() {
-  myVar2 = setInterval(() => {
+  setInterval(() => {
     let roll = Math.random();
-    
-    if(roll < 1/3){
-      console.log(1)
-      powerUps.push( new PowerUp(images.heartred));
-      health++;
+
+    if (roll < 1 / 3) {
+      powerUps.push(new PowerUp(images.heartred));
+
     }
-    else if(roll < 2/3){
-      console.log(2)
-      powerUps.push( new PowerUp(images.bullet));
+    else if (roll < 2 / 3) {
+      powerUps.push(new PowerUp(images.bullet));
+
     }
-    else{
-      console.log(3)
-      powerUps.push( new PowerUp(images.clock));
+    else {
+      powerUps.push(new PowerUp(images.clock));
     }
-  }, 2000);
+  }, 10000)
 }
 
 //FUNCTION TO CLEAR CANVAS//
@@ -530,11 +573,10 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
 
-  PowerupHandler()
 
   loadSpaceship(spaceshipColor);
   myPlayer.changeColor()
-
+  PowerupHandler();
   render();
 }
 
@@ -552,7 +594,7 @@ function insertName() {
   ctx.fillText("Insert Name", W / 2, H / 5);
   backButton();
 
-  clearInterval(myVar)
+  clearInterval(InsertNameAnimationTimer)
   typeWritter(0)
 }
 
@@ -568,7 +610,7 @@ function writeName(char) {
 
   ctx.fillText(playerName, W / 2, H / 2);
 
-  clearInterval(myVar)
+  clearInterval(InsertNameAnimationTimer)
   typeWritter(ctx.measureText(playerName).width)
 
 }
@@ -577,7 +619,7 @@ function writeName(char) {
 
 function typeWritter(nameLength) {
   let flag = false;
-  myVar = setInterval(function () {
+  InsertNameAnimationTimer = setInterval(function () {
     if (flag) {
       flag = false;
       ctx.fillRect(W / 2 + (nameLength) / 2, H / 2 + 7, 20, 6)
@@ -652,8 +694,8 @@ function changeColorSprite() {
 
 function callMenu() {
   clear();
-  clearInterval(myVar)
-  clearInterval(myVar2)
+  clearInterval(InsertNameAnimationTimer)
+  clearInterval(powerUpTimer)
 
   health = 3;
   document.getElementById("menu").style.display = "inline-block";
@@ -680,6 +722,7 @@ function displayHUD() {
   }
   ctx.font = "20px llpixel";
   ctx.textAlign = "left";
+  ctx.fillStyle = "white";
   ctx.fillText(`Score: ${score}`, 25, 30);
 }
 
@@ -712,7 +755,7 @@ createAsteroidsOrEnemys();
 function checkColision(obj1, obj2) {
   if (
     obj1.x + obj1.size >= obj2.x &&
-    obj1.x  <= obj2.x + obj2.size &&
+    obj1.x <= obj2.x + obj2.size &&
     obj1.y + obj1.size >= obj2.y &&
     obj1.y <= obj2.y + obj2.size
   ) {
@@ -759,22 +802,45 @@ function colisionHandler() {
       }
     }
   }
-  for (powerUp of powerUps){
-    if (checkColision(myPlayer,powerUp)){
-      PowerupHandler();
-      if(powerUp.image == images.heartred){
+  for ( enemyMissile of enemyMissiles) {
+    if( checkColision(myPlayer,enemyMissile)){
+      health--;
+      myPlayer.x = W / 2 - 50;
+      myPlayer.y = H / 2 - 50;
+      myPlayer.angle = 0;
+      enemyMissile.x = -300;
+      enemyMissile.y = -300;
+      enemyMissile.destroy();
+    }
+  }
+  for (powerUp of powerUps) {
+    if (checkColision(myPlayer, powerUp)) {
+      if (powerUp.image == images.heartred) {
         health++;
       }
-      if(powerUp.image == images.bullet){
+      if (powerUp.image == images.bullet) {
         backShoot = true;
+        setTimeout(() => {
+          backShoot = false;
+        }, 5000);
+      }
+      if (powerUp.image == images.clock) {
+        pwSlowAsteroids = true;
+        asteroids.forEach(function (asteroid) {
+          asteroid.xVelocity = asteroid.xVelocity / 2;
+          asteroid.yVelocity = asteroid.yVelocity / 2;
+        })
+        setTimeout(() => {
+          pwSlowAsteroids = false;
+          asteroids.forEach(function (asteroid) {
+            asteroid.xVelocity = asteroid.xVelocity * 2;
+            asteroid.yVelocity = asteroid.yVelocity * 2;
+          })
+        }, 5000)
 
       }
-      if(powerUp.image == images.clock){
-        asteroids.forEach(function (asteroid) {
-          asteroid.xVelocity = asteroid.xVelocity /2;
-          asteroid.yVelocity = asteroid.yVelocity /2;
-        })
-      }
+      console.log("colision");
+      powerUp.destroy();
     }
   }
 
@@ -791,6 +857,10 @@ function render() {
       asteroid.update();
     });
 
+    powerUps.forEach(powerUp => {
+      powerUp.draw();
+    })
+
     ships.forEach(spaceship => {
       spaceship.draw();
       spaceship.update();
@@ -798,7 +868,10 @@ function render() {
 
     myPlayer.turnShip();
     myPlayer.update();
-
+    
+    if (keys.ArrowUp == false) {
+      myPlayer.brake();
+    }
     if (keys.ArrowUp == true) {
       myPlayer.accelerate();
     }
@@ -817,11 +890,11 @@ function render() {
       missile.update();
       missile.destroy();
     });
-
-    powerUps.forEach(powerUp => {
-      powerUp.draw();
-      powerUp.destroy();
-    })
+    enemyMissiles.forEach((missile) => {
+      missile.draw();
+      missile.update();
+      missile.destroy();
+    });
 
     displayHUD();
     if (health == 0) {
@@ -829,6 +902,6 @@ function render() {
       callMenu();
       window.location.reload()
     }
-  }
+  } 1
   requestAnimationFrame(render);
 }
