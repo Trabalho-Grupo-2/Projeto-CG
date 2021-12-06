@@ -797,7 +797,7 @@ function colisionHandler() {
         missile.x = 1000;
         missile.y = 1000;
         ship.destroy();
-        score += 1000;
+        score += 500;
       }
     }
   }
