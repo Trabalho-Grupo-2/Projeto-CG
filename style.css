@@ -41,11 +41,12 @@ body{
 .retro:hover {
     color: white;
     background: black;
+    transform: translateX(5px) translateY(2px);
 }
 
 .retro:active {
-    background-color: black !important;
-    color: white !important;
+    background-color: white !important;
+    color: black !important;
     box-shadow: 0px 0px black;
     transform: translateX(5px) translateY(2px);
 }
@@ -76,8 +77,8 @@ body{
 }
 
 .retro-img:active {
-    background-color: black !important;
-    color: white !important;
+    background-color:white !important;
+    color: black !important;
     box-shadow: 0px 0px black;
     transform: translateX(5px) translateY(2px);
 }
