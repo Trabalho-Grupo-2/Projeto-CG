@@ -191,12 +191,12 @@ class Player {
   }
 
   turnLeft() {
-    this.angle <= 0 ? (this.angle = 359) : (this.angle -= 1);
+    this.angle <= 0 ? (this.angle = 358) : (this.angle -= 1.5);
     this.turnShip();
   }
 
   turnRight() {
-    this.angle >= 360 ? (this.angle = 1) : (this.angle += 1);
+    this.angle >= 360 ? (this.angle = 2) : (this.angle += 1.5);
     this.turnShip();
   }
 
@@ -485,7 +485,7 @@ class Missile {
 function pushMissiles() {
 
   firstSecond = new Date().getTime();
-  firstSecond = (firstSecond - (firstSecond % 1000)) / 500;
+  firstSecond = (firstSecond - (firstSecond % 800)) / 1000;
 
   if (secondSeconds < firstSecond && backShoot == false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
@@ -545,7 +545,6 @@ class PowerUp {
   }
   destroy() {
     powerUps.pop();
-    console.log("destroyed");
   }
 }
 
@@ -584,7 +583,6 @@ function startGame() {
   document.getElementById("menu").style.display = "none";
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
-  console.log("Game started");
 
   document.getElementById('canvas1').style.cursor = 'none';
   loadSpaceship(spaceshipColor);
@@ -866,7 +864,7 @@ function colisionHandler() {
         }, 5000)
 
       }
-      console.log("colision");
+
       powerUp.destroy();
     }
   }
