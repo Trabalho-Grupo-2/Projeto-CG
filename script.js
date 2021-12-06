@@ -475,7 +475,7 @@ class Missile {
 function pushMissiles() {
 
   firstSecond = new Date().getTime();
-  firstSecond = (firstSecond - (firstSecond % 1000)) / 1000;
+  firstSecond = (firstSecond - (firstSecond % 1000)) / 500;
 
   if (secondSeconds < firstSecond && backShoot == false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
@@ -572,7 +572,7 @@ function startGame() {
   document.getElementById("canvas1").style.backgroundImage = "";
   console.log("Game started");
 
-
+  document.getElementById('canvas1').style.cursor = 'none';
   loadSpaceship(spaceshipColor);
   myPlayer.changeColor()
   PowerupHandler();
