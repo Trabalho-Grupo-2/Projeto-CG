@@ -115,39 +115,3 @@ body{
     }
 }
 
-.hexagon {
-    position: absolute;
-    background-color: hsl(355, 95%, 53%);
-    text-align: center;
-    top: 263px;
-    left: 594px;
-    z-index: 1;
-    animation-duration: 0.96s;
-    animation-name: updownR;
-}
-.hexagon.dude, .hexagon.dude::before, .hexagon.dude::after {
-    width: 32px;
-    height: 53px;
-    border-width: 2px 0 2px 0;
-    border-style: solid;
-}
-.hexagon::before {
-    background-color: inherit;
-    content: "";
-    position: absolute;
-    transform: translateY(-2px) rotate(-60deg);
-    z-index: 1;
-    top: 0;
-    left: 0;
-    border-color: inherit;
-}
-.hexagon::after {
-    background-color: inherit;
-    content: "";
-    position: absolute;
-    transform: translateY(-2px) rotate(60deg);
-    z-index: -1;
-    top: 0;
-    left: 0;
-    border-color: inherit;
-}
