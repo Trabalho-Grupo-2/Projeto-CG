@@ -15,10 +15,9 @@ DONE:
 -> Opção de mudar a cor do Jogador;
 -> PowerUps;
 -> Naves Inimigas (misseis);
+-> Controlos(deslizar);
 
 IN PROGRESS:
-
--> Controlos(deslizar);
 
 
 TODO:

@@ -165,7 +165,8 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 2;
+    this.maxVelocity = 6;
+    this.minVelocity = 0
     this.size = 50;
     this.image = images.spaceshipColor;
   }
@@ -174,15 +175,14 @@ class Player {
     if (this.velocity < this.maxVelocity) {
       this.velocity += 0.02;
     }
-
-    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
-    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
-
   }
 
   brake() {
     if (this.velocity > this.minVelocity) {
-      this.velocity -= 0.5;
+      this.velocity -= 0.08;
+    }
+    if (this.velocity < 0) {
+      this.velocity = 0;
     }
   }
 
@@ -210,6 +210,10 @@ class Player {
   }
 
   update() {
+
+    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
+    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
+
     if (this.y < -this.size) {
       this.y = H;
     }
