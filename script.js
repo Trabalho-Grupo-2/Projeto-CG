@@ -165,7 +165,8 @@ class Player {
     this.y = y;
     this.angle = 0;
     this.velocity = 0;
-    this.maxVelocity = 2;
+    this.maxVelocity = 3;
+    this.minVelocity = 0
     this.size = 50;
     this.image = images.spaceshipColor;
   }
@@ -174,15 +175,14 @@ class Player {
     if (this.velocity < this.maxVelocity) {
       this.velocity += 0.02;
     }
-
-    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
-    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
-
   }
 
   brake() {
     if (this.velocity > this.minVelocity) {
-      this.velocity -= 0.5;
+      this.velocity -= 0.08;
+    }
+    if (this.velocity < 0) {
+      this.velocity = 0;
     }
   }
 
@@ -191,12 +191,12 @@ class Player {
   }
 
   turnLeft() {
-    this.angle <= 0 ? (this.angle = 359) : (this.angle -= 1);
+    this.angle <= 0 ? (this.angle = 358) : (this.angle -= 1.5);
     this.turnShip();
   }
 
   turnRight() {
-    this.angle >= 360 ? (this.angle = 1) : (this.angle += 1);
+    this.angle >= 360 ? (this.angle = 2) : (this.angle += 1.5);
     this.turnShip();
   }
 
@@ -210,6 +210,10 @@ class Player {
   }
 
   update() {
+
+    this.x += this.velocity * Math.cos(this.angle * Math.PI / 180 - (Math.PI / 2));
+    this.y += this.velocity * Math.sin(this.angle * Math.PI / 180 - (Math.PI / 2));
+
     if (this.y < -this.size) {
       this.y = H;
     }
@@ -477,7 +481,7 @@ class Missile {
 function pushMissiles() {
 
   firstSecond = new Date().getTime();
-  firstSecond = (firstSecond - (firstSecond % 1000)) / 500;
+  firstSecond = (firstSecond - (firstSecond % 800)) / 1000;
 
   if (secondSeconds < firstSecond && backShoot == false) {
     missiles.push(new Missile(myPlayer.x, myPlayer.y, myPlayer.angle));
@@ -536,7 +540,6 @@ class PowerUp {
   }
   destroy() {
     powerUps.pop();
-    console.log("destroyed");
   }
 }
 
@@ -573,7 +576,6 @@ function startGame() {
   document.getElementById("menu").style.display = "none";
   document.getElementById("canvas1").style.backgroundColor = "black";
   document.getElementById("canvas1").style.backgroundImage = "";
-  console.log("Game started");
 
   document.getElementById('canvas1').style.cursor = 'none';
   loadSpaceship(spaceshipColor);
@@ -785,6 +787,7 @@ function colisionHandler() {
       myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
       myPlayer.angle = 0;
+      myPlayer.velocity = 0;
     }
   }
   for (ship of ships) {
@@ -822,6 +825,7 @@ function colisionHandler() {
       myPlayer.x = W / 2 - 50;
       myPlayer.y = H / 2 - 50;
       myPlayer.angle = 0;
+      myPlayer.velocity = 0;
       enemyMissile.x = -300;
       enemyMissile.y = -300;
       enemyMissile.destroy();
@@ -853,7 +857,7 @@ function colisionHandler() {
         }, 5000)
 
       }
-      console.log("colision");
+
       powerUp.destroy();
     }
   }
