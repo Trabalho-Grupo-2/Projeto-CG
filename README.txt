@@ -14,11 +14,11 @@ DONE:
 -> Colisões objectos com misseis;
 -> Opção de mudar a cor do Jogador;
 -> PowerUps;
+-> Naves Inimigas (misseis);
 
 IN PROGRESS:
 
 -> Controlos(deslizar);
--> Naves Inimigas (misseis);
 
 
 TODO:
