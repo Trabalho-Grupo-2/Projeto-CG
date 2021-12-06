@@ -11,7 +11,7 @@ const W = canvas.width,
 ctx.fillStyle = "white";
 ctx.font = "40px llpixel";
 
-//VARIABLES//
+// GLOBAL VARIABLES//
 let score = 0,
   acelleration = 0.1,
   angle = 0,
@@ -29,25 +29,29 @@ let score = 0,
   myLeaderBoard = localStorage.getItem("Leaderboard") ? JSON.parse(localStorage.getItem("Leaderboard")) : []
 
 //SPACESHIP COLOR
+
 let color = ["Blue", "Green", "Pink", "Red", "White", "Yellow"];
 
 //MOUSE COORDINATES//
+
 let x, y;
 
-//GAMESTART AND BACKBUTTON CONTROL BOOL
+//GAMESTART AND BACKBUTTON CONTROL BOOL //
 let gamestart = false,
   backButtonBool = false,
   insertNameBool = false,
   arrowHeadBool = false;
 
-// object arrays
+// OBJECT ARRAYS // 
+
 const asteroids = [],
   ships = [],
   missiles = [],
   powerUps = [],
   enemyMissiles = [];
 
-//sprite imports
+//IMPORTING SPRITES AND ADDING TO ARRAY //
+
 let images = {};
 loadImage("asteroid");
 loadSpaceship(spaceshipColor);
@@ -84,7 +88,7 @@ let keys = {
   SpaceBar: false,
 };
 
-//ASSOCIATE METHODS ON KEYS DOWNS FOR MOVIMENT //
+//SETTING CONTROL KEYS //
 
 addEventListener("keydown", (event) => {
   if (event.key == "ArrowUp") {
@@ -410,6 +414,8 @@ class Ship {
   }
 }
 
+//ENEMY MISSILES CLASS DEFINITION //
+
 class EnemyMissile {
   constructor(x, y, angle) {
     this.x = x;
@@ -517,6 +523,8 @@ function createAsteroidsOrEnemys() {
   }
 }
 
+// CLASS FOR POWERUPS //
+
 class PowerUp {
   constructor(image) {
     this.image = image;
@@ -536,6 +544,8 @@ class PowerUp {
     console.log("destroyed");
   }
 }
+
+// FUNCTION THAT ROLLS A DICE FOR A POWER UP //
 
 function PowerupHandler() {
   setInterval(() => {
@@ -579,7 +589,7 @@ function startGame() {
   render();
 }
 
-//FUNCTION TO INSERT NAME ON CANVAS
+//FUNCTIONS TO INSERT NAME ON CANVAS //
 
 function insertName() {
   insertNameBool = true
@@ -614,7 +624,7 @@ function writeName(char) {
 
 }
 
-//FUNCTION THAT CREATES THE TYPEWRITTER EFFECT 
+//FUNCTION THAT CREATES THE TYPEWRITTER EFFECT //
 
 function typeWritter(nameLength) {
   let flag = false;
@@ -668,6 +678,8 @@ function options() {
   ctx.drawImage(images.arrowHeadLeft, (W / 6) - 20, H / 2 - 40, 200, 200)
   ctx.drawImage(images.arrowHeadRight, ((W / 6) * 4) - 20, H / 2 - 40, 200, 200)
 }
+
+//FUNCTIONS TO CHANGE SHIP COLOR//
 
 function changeColor(n) {
 
@@ -725,6 +737,8 @@ function displayHUD() {
   ctx.fillText(`Score: ${score}`, 25, 30);
 }
 
+// LEADERBOARD FILTER //
+
 function filterLeaderboard(a, b) {
 
   if (a.pScore < b.pScore) {
@@ -735,6 +749,8 @@ function filterLeaderboard(a, b) {
   }
   return 0;
 }
+
+//FUNCTION TO PERSIST LOCALLY BEST 5 SCORES //
 
 function insertScore() {
 
@@ -749,8 +765,12 @@ function insertScore() {
   localStorage.setItem("Leaderboard", JSON.stringify(myLeaderBoard));
 }
 
+// SETTING INICIAL ENEMYS //
+
 createAsteroidsOrEnemys();
 
+
+// GLOBAL FUNCTION TO DETECT COLISIONS //
 function checkColision(obj1, obj2) {
   if (
     obj1.x + obj1.size >= obj2.x &&
@@ -761,6 +781,8 @@ function checkColision(obj1, obj2) {
     return true;
   }
 }
+
+// SPECIFIC FUNCTIONS TO LOOK FOR COLISIONS BETWEEN CERTAIN OBJECTS AND RESPECTIVE EFFECTS //
 
 function colisionHandler() {
   for (asteroid of asteroids) {
