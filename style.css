@@ -1,3 +1,5 @@
+
+
 @font-face {
     font-family: llpixel;
     src: url(fonts/LLPIXEL3.ttf);
@@ -14,6 +16,7 @@ canvas {
 body{
     background-image:  url(sprites/galaxy.gif);
     background-size: cover;
+    overflow: hidden;
 }
 
 
@@ -98,6 +101,20 @@ body{
 }
 .titleAsteroids{
     margin-bottom: 80px;
+    animation: zoom-in-zoom-out 3s ease-out;
+}
+
+  
+@keyframes zoom-in-zoom-out {
+0% {
+    transform: scale(0, 0);
+}
+50% {
+    transform: scale(1.2, 1.2);
+}
+100% {
+    transform: scale(1, 1);
+}
 }
 
 #ASTEROIDS{
